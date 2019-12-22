@@ -1,4 +1,4 @@
-package xyz.erupt.open_api.tag;
+package xyz.erupt.openApi.tag;
 
 /**
  * Created by liyuepeng on 2019-08-15.

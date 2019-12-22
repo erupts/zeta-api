@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<sql >
+    <demo cache="5000">
+        select 'demo'
+        <if test="a==1||a==1||1==2">
+            demo where 1=:a
+        </if>
+    </demo>
+    <demo2>
+        select '123' where 1=:aa
+    </demo2>
+</sql>

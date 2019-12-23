@@ -1,4 +1,6 @@
 #jdbc
+openApi:
+  xmlbasePath: /epi
 spring:
   datasource:
     url: jdbc:sqlserver://59.110.40.167:3434;DatabaseName=erupt

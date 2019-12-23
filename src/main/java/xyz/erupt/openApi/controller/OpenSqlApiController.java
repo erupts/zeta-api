@@ -36,14 +36,14 @@ public class OpenSqlApiController {
         return openApiService.queryByCache(fileName, elementName, sqlOpenApi);
     }
 
-//    @RequestMapping("/modify/{fileName}/{sqlElement}")
-//    @ResponseBody
-//    @Transactional
-//    public Object modify(@PathVariable("fileName") String fileName,
-//                         @PathVariable("elementName") String elementName,
-//                         HttpServletRequest request) {
-//        return openApiService.xmlToQuery(fileName, elementName, request,
-//                (element, sql) -> entityManager.createNativeQuery(sql).executeUpdate());
-//    }
+    @RequestMapping("/modify/{fileName}/{elementName}")
+    @ResponseBody
+    @Transactional
+    public Object modify(@PathVariable("fileName") String fileName,
+                         @PathVariable("elementName") String elementName,
+                         HttpServletRequest request) {
+
+        return openApiService.modify(fileName, elementName, sqlOpenApi);
+    }
 
 }

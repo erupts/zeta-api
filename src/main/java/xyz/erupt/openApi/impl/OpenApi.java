@@ -12,4 +12,6 @@ public interface OpenApi {
 
     Object query(Element element, String queryStr, Map<String, String> params);
 
+    Object modify(Element element, String queryStr, Map<String, String> params);
+
 }

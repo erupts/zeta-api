@@ -29,5 +29,11 @@ public class SqlOpenApi implements OpenApi {
         return namedTemplate.queryForList(sql, params);
     }
 
+    @Override
+    public Object modify(Element element, String sql, Map<String, String> params) {
+        log.info(sql);
+        return namedTemplate.update(sql, params);
+    }
+
 
 }

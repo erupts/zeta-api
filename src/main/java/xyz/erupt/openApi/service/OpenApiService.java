@@ -25,10 +25,7 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 
@@ -72,6 +69,52 @@ public class OpenApiService {
         }
     }
 
+    public Object modify(String fileName, String elementName, OpenApi openApi) {
+        return xmlToQuery(fileName, elementName,
+                (element, expression) -> openApi.modify(element, expression, getReqMap(expression)));
+    }
+
+    public Object queryByCache(String fileName, String elementName, OpenApi openApi) {
+        return xmlToQuery(fileName, elementName, (element, expression) -> {
+            Attribute cacheAttr = element.attribute(EleTag.CACHE);
+            if (null != cacheAttr) {
+                String cacheKey = fileName + "_" + elementName;
+                Cache<String, Object> cache = cacheMap.get(cacheKey);
+                if (null == cache) {
+                    cache = Caffeine.newBuilder()
+                            .initialCapacity(1).maximumSize(100)
+                            .expireAfterWrite(Long.valueOf(cacheAttr.getValue()), TimeUnit.MILLISECONDS)
+                            .build();
+                    cacheMap.put(fileName + "_" + elementName, cache);
+                }
+                Map<String, String> param = getReqMap(expression);
+                StringBuilder paramKey = new StringBuilder();
+                for (String key : param.keySet()) {
+                    paramKey.append(key).append("=").append(param.get(key)).append("|");
+                }
+                return cache.get(paramKey.toString(), (key) -> openApi.query(element, expression, param));
+            } else {
+                return openApi.query(element, expression, getReqMap(expression));
+            }
+        });
+    }
+
+
+    public Object xmlToQuery(String fileName, String elementName, BiFunction<Element, String, Object> function) {
+        Element rootElement = getXmlDocument(fileName).getRootElement();
+        Element element = rootElement.element(elementName);
+        String expression = parseElement(element);
+        OpenApiHandler openApiHandler = getRootHandler(rootElement);
+        if (null != openApiHandler) {
+            expression = openApiHandler.handler(element, expression);
+        }
+        Object result = function.apply(element, expression);
+        if (null != openApiHandler) {
+            return openApiHandler.handlerResult(element, result);
+        }
+        return result;
+    }
+
     private String parseElement(Element element) {
         String eval = element.getTextTrim();
         List<Element> list = element.elements();
@@ -110,42 +153,6 @@ public class OpenApiService {
         }
     }
 
-    public Object queryByCache(String fileName, String elementName, OpenApi openApi) {
-        return xmlToQuery(fileName, elementName, (element, expression) -> {
-            Attribute cacheAttr = element.attribute(EleTag.CACHE);
-            if (null != cacheAttr) {
-                String cacheKey = fileName + "_" + elementName;
-                Cache<String, Object> cache = cacheMap.get(cacheKey);
-                if (null == cache) {
-                    cache = Caffeine.newBuilder()
-                            .initialCapacity(1).maximumSize(100)
-                            .expireAfterWrite(Long.valueOf(cacheAttr.getValue()), TimeUnit.MILLISECONDS)
-                            .build();
-                    cacheMap.put(fileName + "_" + elementName, cache);
-                }
-                return cache.get(expression, (key) -> openApi.query(element, expression, getReqMap(expression)));
-            } else {
-                return openApi.query(element, expression, getReqMap(expression));
-            }
-        });
-    }
-
-
-    public Object xmlToQuery(String fileName, String elementName, BiFunction<Element, String, Object> function) {
-        Element rootElement = getXmlDocument(fileName).getRootElement();
-        Element element = rootElement.element(elementName);
-        String expression = parseElement(element);
-        OpenApiHandler openApiHandler = getRootHandler(rootElement);
-        if (null != openApiHandler) {
-            expression = openApiHandler.handler(element, expression);
-        }
-        Object result = function.apply(element, expression);
-        if (null != openApiHandler) {
-            return openApiHandler.handlerResult(element, result);
-        }
-        return result;
-    }
-
 
     private OpenApiHandler getRootHandler(Element element) {
         Attribute handlerAttr = element.attribute(RootTag.HANDLER);
@@ -159,12 +166,14 @@ public class OpenApiService {
         return null;
     }
 
-    private Map<String, String> getReqMap(String sql) {
+    public static final String COLON = ":";
+
+    public Map<String, String> getReqMap(String sql) {
         Enumeration<String> parameterNames = request.getParameterNames();
-        Map<String, String> map = new HashMap<>(request.getParameterMap().size());
+        Map<String, String> map = new TreeMap<>();
         while (parameterNames.hasMoreElements()) {
             String parameterName = parameterNames.nextElement();
-            if (sql.contains(":" + parameterName)) {
+            if (sql.contains(COLON + parameterName)) {
                 String val = request.getParameter(parameterName);
                 if (StringUtils.isBlank(val)) {
                     val = "";

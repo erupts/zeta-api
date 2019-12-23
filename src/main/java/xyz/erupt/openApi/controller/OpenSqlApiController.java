@@ -24,8 +24,6 @@ public class OpenSqlApiController {
     /**
      * @param fileName   文件名称
      * @param sqlElement xml中sql元素
-     * @param pageSize   数据量
-     * @param pageIndex  页码，索引从1开始
      * @return result
      */
     @RequestMapping("/query/{fileName}/{elementName}")

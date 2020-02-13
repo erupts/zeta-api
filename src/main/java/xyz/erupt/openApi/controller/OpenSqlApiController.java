@@ -7,6 +7,9 @@ import xyz.erupt.openApi.impl.SqlOpenApi;
 import xyz.erupt.openApi.service.OpenApiService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 
 /**
  * Created by liyuepeng on 2019-08-14.
@@ -40,7 +43,6 @@ public class OpenSqlApiController {
     public Object modify(@PathVariable("fileName") String fileName,
                          @PathVariable("elementName") String elementName,
                          HttpServletRequest request) {
-
         return openApiService.modify(fileName, elementName, sqlOpenApi);
     }
 

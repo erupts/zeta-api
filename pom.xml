@@ -14,7 +14,7 @@
 
     <groupId>xyz.erupt</groupId>
     <artifactId>open-api</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
     <name>erupt-open-api</name>
     <description>erupt open api</description>
 
@@ -45,4 +45,12 @@
             <artifactId>lombok</artifactId>
         </dependency>
     </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>wings-times</id>
+            <name>wings-times-releases</name>
+            <url>http://192.168.1.188:8081/artifactory/libs-release-local</url>
+        </repository>
+    </distributionManagement>
 </project>

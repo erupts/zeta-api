@@ -71,7 +71,7 @@ public class OpenApiService {
 
     public Object modify(String fileName, String elementName, OpenApi openApi) {
         return xmlToQuery(fileName, elementName,
-                (element, expression) -> openApi.modify(element, expression, getReqMap(expression)));
+                (element, expression) -> openApi.modify(element, expression, getReqMap()));
     }
 
     public Object queryByCache(String fileName, String elementName, OpenApi openApi) {
@@ -87,14 +87,14 @@ public class OpenApiService {
                             .build();
                     cacheMap.put(fileName + "_" + elementName, cache);
                 }
-                Map<String, String> param = getReqMap(expression);
+                Map<String, String> param = getReqMap();
                 StringBuilder paramKey = new StringBuilder();
                 for (String key : param.keySet()) {
                     paramKey.append(key).append("=").append(param.get(key)).append("|");
                 }
                 return cache.get(paramKey.toString(), (key) -> openApi.query(element, expression, param));
             } else {
-                return openApi.query(element, expression, getReqMap(expression));
+                return openApi.query(element, expression, getReqMap());
             }
         });
     }
@@ -120,24 +120,16 @@ public class OpenApiService {
         List<Element> list = element.elements();
         if (list.size() > 0) {
             StringBuilder sb = new StringBuilder(eval);
+            ScriptEngine js = new ScriptEngineManager().getEngineByName("JavaScript");
+            Enumeration<String> parameterNames = request.getParameterNames();
+            while (parameterNames.hasMoreElements()) {
+                String parameterName = parameterNames.nextElement();
+                js.put(parameterName,request.getParameter(parameterName));
+            }
             for (Element ele : list) {
                 if (IfTag.NAME.equals(ele.getName())) {
                     String value = ele.attribute(IfTag.ATTR_TEST).getValue();
-                    ScriptEngine js = new ScriptEngineManager().getEngineByName("JavaScript");
                     try {
-                        Enumeration<String> parameterNames = request.getParameterNames();
-                        while (parameterNames.hasMoreElements()) {
-                            String parameterName = parameterNames.nextElement();
-                            if (value.contains(parameterName)) {
-                                String val = request.getParameter(parameterName);
-                                if (StringUtils.isBlank(val)) {
-                                    val = "null";
-                                } else {
-                                    val = "'" + val + "'";
-                                }
-                                value = value.replace(parameterName, val);
-                            }
-                        }
                         Boolean bool = (Boolean) js.eval("!!(" + value + ")");
                         if (bool) {
                             sb.append(" ").append(ele.getTextTrim());
@@ -166,20 +158,18 @@ public class OpenApiService {
         return null;
     }
 
-    public static final String COLON = ":";
+//    private static final String COLON = ":";
 
-    public Map<String, String> getReqMap(String sql) {
+    public Map<String, String> getReqMap() {
         Enumeration<String> parameterNames = request.getParameterNames();
         Map<String, String> map = new TreeMap<>();
         while (parameterNames.hasMoreElements()) {
             String parameterName = parameterNames.nextElement();
-            if (sql.contains(COLON + parameterName)) {
-                String val = request.getParameter(parameterName);
-                if (StringUtils.isBlank(val)) {
-                    val = "";
-                }
-                map.put(parameterName, val);
+            String val = request.getParameter(parameterName);
+            if (StringUtils.isBlank(val)) {
+                val = "";
             }
+            map.put(parameterName, val);
         }
         return map;
     }

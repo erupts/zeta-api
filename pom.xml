@@ -14,7 +14,7 @@
 
     <groupId>xyz.erupt</groupId>
     <artifactId>open-api</artifactId>
-    <version>0.1.1</version>
+    <version>0.1.2</version>
     <name>erupt-open-api</name>
     <description>erupt open api</description>
 
@@ -50,7 +50,7 @@
         <repository>
             <id>wings-times</id>
             <name>wings-times-releases</name>
-            <url>http://192.168.1.188:8081/artifactory/libs-release-local</url>
+            <url>http://192.168.1.189:8081/repository/maven-releases/</url>
         </repository>
     </distributionManagement>
 </project>

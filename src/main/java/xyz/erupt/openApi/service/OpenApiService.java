@@ -52,26 +52,30 @@ public class OpenApiService {
     private Document getXmlDocument(String fileName) {
         try {
             if (hotReadXml) {
-                Resource resource = new ClassPathResource(xmlBasePath + "/" + fileName + ".xml");
-                return new SAXReader().read(resource.getFile());
+                return new SAXReader().read(this.getClass().getResourceAsStream("/" + xmlBasePath + "/" + fileName + ".xml"));
             } else {
                 if (xmlDocuments.containsKey(fileName)) {
                     return xmlDocuments.get(fileName);
                 } else {
-                    Resource resource = new ClassPathResource(xmlBasePath + "/" + fileName + ".xml");
-                    Document document = new SAXReader().read(resource.getFile());
+                    Document document = new SAXReader().read(this.getClass().getResourceAsStream("/" + xmlBasePath + "/" + fileName + ".xml"));
                     xmlDocuments.put(fileName, document);
                     return document;
                 }
             }
-        } catch (DocumentException | IOException e) {
+        } catch (DocumentException e) {
             throw new RuntimeException(e.getMessage());
         }
     }
 
     public Object modify(String fileName, String elementName, OpenApi openApi) {
+        Map<String, String> map = getReqMap();
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            if (StringUtils.isBlank(entry.getValue())) {
+                map.put(entry.getKey(), null);
+            }
+        }
         return xmlToQuery(fileName, elementName,
-                (element, expression) -> openApi.modify(element, expression, getReqMap()));
+                (element, expression) -> openApi.modify(element, expression, map));
     }
 
     public Object queryByCache(String fileName, String elementName, OpenApi openApi) {
@@ -124,7 +128,7 @@ public class OpenApiService {
             Enumeration<String> parameterNames = request.getParameterNames();
             while (parameterNames.hasMoreElements()) {
                 String parameterName = parameterNames.nextElement();
-                js.put(parameterName,request.getParameter(parameterName));
+                js.put(parameterName, request.getParameter(parameterName));
             }
             for (Element ele : list) {
                 if (IfTag.NAME.equals(ele.getName())) {

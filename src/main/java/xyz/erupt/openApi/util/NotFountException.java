@@ -5,4 +5,8 @@ package xyz.erupt.openApi.util;
  * @date 2020-04-10
  */
 public class NotFountException extends RuntimeException {
+
+    public NotFountException(String message) {
+        super(message);
+    }
 }

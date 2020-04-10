@@ -17,8 +17,8 @@ public class ApiExceptionHandler {
     @ExceptionHandler(NotFountException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     @ResponseBody
-    public String handleInvalidRequestError() {
-        return "404 not found";
+    public String handleInvalidRequestError(NotFountException e) {
+        return e.getMessage();
     }
 
 }

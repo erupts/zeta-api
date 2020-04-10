@@ -60,16 +60,13 @@ public class OpenApiService {
                     return xmlDocuments.get(fileName);
                 } else {
                     Document document = new SAXReader().read(this.getClass().getResourceAsStream("/" + xmlBasePath + "/" + fileName + ".xml"));
-                    if (null == document) {
-                        throw new NotFountException();
-                    }
                     xmlDocuments.put(fileName, document);
                     return document;
                 }
             }
         } catch (DocumentException e) {
             if (e.getCause() instanceof MalformedURLException) {
-                throw new NotFountException();
+                throw new NotFountException("not found document");
             } else {
                 throw new RuntimeException(e.getMessage());
             }
@@ -117,7 +114,7 @@ public class OpenApiService {
         Element rootElement = getXmlDocument(fileName).getRootElement();
         Element element = rootElement.element(elementName);
         if (null == element) {
-            throw new NotFountException();
+            throw new NotFountException("not found element");
         }
         String expression = parseElement(element);
         OpenApiHandler openApiHandler = getRootHandler(rootElement);

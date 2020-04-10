@@ -6,8 +6,8 @@
             demo where 1=:a
         </if>
     </demo>
-    <demo2>
-        select '123' where 1=1
+    <demo2 cache="1000">
+        select '121233' where 1=1
     </demo2>
     <insert>
         insert into demo(html) values (:html)

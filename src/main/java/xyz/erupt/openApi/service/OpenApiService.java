@@ -68,7 +68,11 @@ public class OpenApiService {
                 }
             }
         } catch (DocumentException e) {
-            throw new RuntimeException(e.getMessage());
+            if (e.getCause() instanceof MalformedURLException) {
+                throw new NotFountException();
+            } else {
+                throw new RuntimeException(e.getMessage());
+            }
         }
     }
 

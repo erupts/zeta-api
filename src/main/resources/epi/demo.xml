@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<sql >
+<sql>
     <demo cache="5000">
         select 'demo'
         <if test="a==1||a==1||1==2">
@@ -7,7 +7,7 @@
         </if>
     </demo>
     <demo2>
-        select '123' where 1=:aa
+        select '123' where 1=1
     </demo2>
     <insert>
         insert into demo(html) values (:html)

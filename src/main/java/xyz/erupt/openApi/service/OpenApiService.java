@@ -10,21 +10,20 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-import xyz.erupt.openApi.impl.OpenApi;
 import xyz.erupt.openApi.handler.OpenApiHandler;
+import xyz.erupt.openApi.impl.OpenApi;
+import xyz.erupt.openApi.tag.EleTag;
 import xyz.erupt.openApi.tag.IfTag;
 import xyz.erupt.openApi.tag.RootTag;
-import xyz.erupt.openApi.tag.EleTag;
+import xyz.erupt.openApi.util.NotFountException;
 import xyz.erupt.openApi.util.OpenApiSpringUtil;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
@@ -45,6 +44,9 @@ public class OpenApiService {
     @Value("${openApi.xmlbasePath:epi}")
     private String xmlBasePath;
 
+    @Value("${openApi.openCache:true}")
+    private boolean openCache;
+
     private Map<String, Cache<String, Object>> cacheMap = new HashMap<>();
 
     private Map<String, Document> xmlDocuments = new HashMap<>();
@@ -58,6 +60,9 @@ public class OpenApiService {
                     return xmlDocuments.get(fileName);
                 } else {
                     Document document = new SAXReader().read(this.getClass().getResourceAsStream("/" + xmlBasePath + "/" + fileName + ".xml"));
+                    if (null == document) {
+                        throw new NotFountException();
+                    }
                     xmlDocuments.put(fileName, document);
                     return document;
                 }
@@ -81,7 +86,7 @@ public class OpenApiService {
     public Object queryByCache(String fileName, String elementName, OpenApi openApi) {
         return xmlToQuery(fileName, elementName, (element, expression) -> {
             Attribute cacheAttr = element.attribute(EleTag.CACHE);
-            if (null != cacheAttr) {
+            if (null != cacheAttr && openCache) {
                 String cacheKey = fileName + "_" + elementName;
                 Cache<String, Object> cache = cacheMap.get(cacheKey);
                 if (null == cache) {
@@ -107,6 +112,9 @@ public class OpenApiService {
     public Object xmlToQuery(String fileName, String elementName, BiFunction<Element, String, Object> function) {
         Element rootElement = getXmlDocument(fileName).getRootElement();
         Element element = rootElement.element(elementName);
+        if (null == element) {
+            throw new NotFountException();
+        }
         String expression = parseElement(element);
         OpenApiHandler openApiHandler = getRootHandler(rootElement);
         if (null != openApiHandler) {

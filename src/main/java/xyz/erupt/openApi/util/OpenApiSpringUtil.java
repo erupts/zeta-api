@@ -37,4 +37,9 @@ public class OpenApiSpringUtil implements ApplicationContextAware {
             }
         }
     }
+
+    //根据类路径获取bean
+    public static <T> T getBeanByPath(String path, Class<T> clazz) throws ClassNotFoundException {
+        return clazz.cast(getBean(Class.forName(path)));
+    }
 }

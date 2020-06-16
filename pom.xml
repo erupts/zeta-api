@@ -14,7 +14,7 @@
 
     <groupId>xyz.erupt</groupId>
     <artifactId>open-api</artifactId>
-    <version>0.1.4</version>
+    <version>0.2.1</version>
     <name>erupt-open-api</name>
     <description>erupt open api</description>
 
@@ -50,6 +50,10 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
         </dependency>
     </dependencies>
 

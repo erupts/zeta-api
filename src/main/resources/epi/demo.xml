@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <sql>
+    <!--测试-->
     <demo cache="5000">
         select 'demo'
         <if test="a==1||a==1||1==2">
             demo where 1=:a
         </if>
     </demo>
+    <!--测试2-->
     <demo2 cache="1000">
         select '121233' where 1=1
     </demo2>

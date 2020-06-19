@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<sql desc="我是一个测试文档">
-    <demo cache="5000" title="测试" desc="测试说明">
-        select 'demo'
-        <if test="a==1||a==1||1==2">
-            demo where 1=:a
+<sql desc="测试接口">
+    <hello-world title="基础使用">
+        select 'hello world' $key
+    </hello-world>
+    <cache cache="5000" title="使用缓存(cache单位毫秒)">
+        select 'cache',now() now
+    </cache>
+    <param title="参数获取与处理">
+        select :param param
+    </param>
+    <condition title="条件处理">
+        select
+        <if test="param&gt;10">
+            'gt 10' param_status
         </if>
-    </demo>
-    <demo2 cache="1000" type="query">
-        select '121233',:param param where 1=1
-    </demo2>
-    <insert title="插入" type="modify">
-        insert into demo(html) values (:html)
+        <if test="param&lt;10">
+            'lt 10' param_status
+        </if>
+        <if test="param==10">
+            'eq 10' param_status
+        </if>
+    </condition>
+    <insert title="插入数据" type="modify">
+        insert into demo(content) values (:content)
     </insert>
 </sql>

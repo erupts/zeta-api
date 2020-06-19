@@ -30,7 +30,7 @@ public class ApiDoc {
     private OpenApiService openApiService;
 
 
-    @GetMapping(value = "/api-doc/{fileName}", produces = "text/html;charset=utf-8")
+    @GetMapping(value = "/api-doc/{fileName}.html", produces = "text/html;charset=utf-8")
     public void apiDoc(HttpServletResponse response, HttpServletRequest request, @PathVariable("fileName") String fileName) {
         if (!openApiConfig.isApiDoc()) {
             response.setStatus(401);
@@ -45,9 +45,8 @@ public class ApiDoc {
             if (null != document) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("root", document.getRootElement());
-                map.put("domain", request.getRequestURL().substring(0,
-                        request.getRequestURL().indexOf(request.getServletPath())) +
-                        "/open-api/sql/query/" + fileName + "/");
+                map.put("domain", request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getServletPath())));
+                map.put("fileName", fileName);
                 response.setCharacterEncoding("utf-8");
                 emailTemplate.process(map, response.getWriter());
             }

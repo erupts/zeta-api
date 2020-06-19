@@ -24,13 +24,13 @@ public class SqlOpenApi implements OpenApi {
     private NamedParameterJdbcTemplate namedTemplate;
 
     @Override
-    public Object query(Element element, String sql, Map<String, String> params) {
+    public Object query(Element element, String sql, Map<String, Object> params) {
         log.info(sql);
         return namedTemplate.queryForList(sql, params);
     }
 
     @Override
-    public Object modify(Element element, String sql, Map<String, String> params) {
+    public Object modify(Element element, String sql, Map<String, Object> params) {
         log.info(sql);
         return namedTemplate.update(sql, params);
     }

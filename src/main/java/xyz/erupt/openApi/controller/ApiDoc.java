@@ -42,14 +42,12 @@ public class ApiDoc {
             cfg.setDefaultEncoding("utf-8");
             Template emailTemplate = cfg.getTemplate("/api-doc.ftl");
             Document document = openApiService.getXmlDocument(fileName);
-            ;
             if (null != document) {
                 Map<String, Object> map = new HashMap<>();
-                map.put("elements", document.getRootElement().elements());
+                map.put("root", document.getRootElement());
                 map.put("domain", request.getRequestURL().substring(0,
                         request.getRequestURL().indexOf(request.getServletPath())) +
                         "/open-api/sql/query/" + fileName + "/");
-                document.getRootElement().elements().get(0);
                 response.setCharacterEncoding("utf-8");
                 emailTemplate.process(map, response.getWriter());
             }

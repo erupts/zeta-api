@@ -70,18 +70,12 @@ public class OpenApiService {
         }
     }
 
-    public Object modify(String fileName, String elementName, OpenApi openApi) {
-        Map<String, String> map = getReqMap();
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            if (StringUtils.isBlank(entry.getValue())) {
-                map.put(entry.getKey(), null);
-            }
-        }
+    public Object modify(String fileName, String elementName, OpenApi openApi, Map<String, Object> params) {
         return xmlToQuery(fileName, elementName,
-                (element, expression) -> openApi.modify(element, expression, map));
+                (element, expression) -> openApi.modify(element, expression, params));
     }
 
-    public Object queryByCache(String fileName, String elementName, OpenApi openApi) {
+    public Object queryByCache(String fileName, String elementName, OpenApi openApi, Map<String, Object> params) {
         return xmlToQuery(fileName, elementName, (element, expression) -> {
             Attribute cacheAttr = element.attribute(EleTag.CACHE);
             if (null != cacheAttr && openApiConfig.isOpenCache()) {
@@ -100,14 +94,13 @@ public class OpenApiService {
                             .build();
                     cacheMap.put(fileName + "_" + elementName, cache);
                 }
-                Map<String, String> param = getReqMap();
                 StringBuilder paramKey = new StringBuilder();
-                for (String key : param.keySet()) {
-                    paramKey.append(key).append("=").append(param.get(key)).append("|");
+                for (String key : params.keySet()) {
+                    paramKey.append(key).append("=").append(params.get(key)).append("|");
                 }
-                return cache.get(paramKey.toString(), (key) -> openApi.query(element, expression, param));
+                return cache.get(paramKey.toString(), (key) -> openApi.query(element, expression, params));
             } else {
-                return openApi.query(element, expression, getReqMap());
+                return openApi.query(element, expression, params);
             }
         });
     }

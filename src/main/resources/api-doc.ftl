@@ -1,22 +1,43 @@
 <html>
 <head>
-    <title>api文档</title>
+    <title>api document</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="/bootstrap.min.css">
+    <style>
+        body {
+            background: #454d55;
+        }
+    </style>
 </head>
 <body>
-<table border="1">
-    <tr>
-        <th>key</th>
-        <th>缓存时间</th>
-        <th>请求地址</th>
-        <th>描述</th>
-    </tr>
-    <#list elements as ele>
+<table class="table table-hover table-bordered table-dark">
+    <#if root.attributeValue('desc')??>
         <tr>
-            <td>${ele.name}</td>
-            <td>${ele.attributeValue('cache')!''}</td>
+            <th colspan="10">
+                ${root.attributeValue('desc')}
+            </th>
+        </tr>
+    </#if>
+    <tr>
+        <th colspan="10">
+            <span class="badge badge-primary">POST</span> &nbsp; (Content-Type: <span
+                    class="text-warning">application/json</span> )
+        </th>
+    </tr>
+    <tr>
+        <th>接口名称 (title)</th>
+        <th>请求地址</th>
+        <th>描述 (desc)</th>
+        <th>缓存时间 (cache)</th>
+        <th>操作</th>
+    </tr>
+    <#list root.elements() as ele>
+        <tr>
+            <td>${ele.attributeValue('title')!ele.name}</td>
             <td>${domain + ele.name}</td>
-            <td>${ele}</td>
+            <td>${ele.attributeValue('desc')!''}</td>
+            <td>${ele.attributeValue('cache')!'0'}</td>
+            <#--<td><button class="btn btn-primary btn-sm">测试</button></td>-->
         </tr>
     </#list>
 </table>

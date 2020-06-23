@@ -34,7 +34,7 @@
     <#list root.elements() as ele>
         <tr>
             <td>${ele.attributeValue('title')!ele.name}</td>
-            <td>${domain}/open-api/sql/${ele.attributeValue('type')!'query'}/${fileName}/${ele.name}</td>
+            <td style="color: #3462bf">${domain}/open-api/sql/${ele.attributeValue('type')!'query'}/${fileName}/${ele.name}</td>
             <td>${ele.attributeValue('desc')!''}</td>
             <td>${ele.attributeValue('cache')!'0'}</td>
             <#--<td><button class="btn btn-primary btn-sm">测试</button></td>-->

@@ -11,7 +11,6 @@ import org.dom4j.io.SAXReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xyz.erupt.openApi.config.OpenApiConfig;
-import xyz.erupt.openApi.handler.CacheHandler;
 import xyz.erupt.openApi.handler.OpenApiHandler;
 import xyz.erupt.openApi.impl.OpenApi;
 import xyz.erupt.openApi.tag.EleTag;
@@ -41,6 +40,8 @@ public class OpenApiService {
 
     @Autowired
     private OpenApiConfig openApiConfig;
+
+    public static final String REQUEST_BODY_KEY = "$requestBody";
 
     private Map<String, Cache<String, Object>> cacheMap = new HashMap<>();
 
@@ -81,12 +82,11 @@ public class OpenApiService {
             if (null != cacheAttr && openApiConfig.isOpenCache()) {
                 String cacheKey = fileName + "_" + elementName;
                 Cache<String, Object> cache = cacheMap.get(cacheKey);
-                try {
-                    CacheHandler cacheHandler = OpenApiSpringUtil.getBeanByPath(openApiConfig.getCacheProvider(), CacheHandler.class);
-
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    CacheHandler cacheHandler = OpenApiSpringUtil.getBeanByPath(openApiConfig.getCacheProvider(), CacheHandler.class);
+//                } catch (ClassNotFoundException e) {
+//                    e.printStackTrace();
+//                }
                 if (null == cache) {
                     cache = Caffeine.newBuilder()
                             .initialCapacity(1).maximumSize(100)
@@ -130,10 +130,12 @@ public class OpenApiService {
         if (list.size() > 0) {
             StringBuilder sb = new StringBuilder(eval);
             ScriptEngine js = new ScriptEngineManager().getEngineByName("JavaScript");
-            Enumeration<String> parameterNames = request.getParameterNames();
-            while (parameterNames.hasMoreElements()) {
-                String parameterName = parameterNames.nextElement();
-                js.put(parameterName, request.getParameter(parameterName));
+            Object paramObj = request.getAttribute(OpenApiService.REQUEST_BODY_KEY);
+            if (paramObj != null) {
+                Map<String, Object> param = (Map<String, Object>) paramObj;
+                for (String key : param.keySet()) {
+                    js.put(key, param.get(key));
+                }
             }
             for (Element ele : list) {
                 if (IfTag.NAME.equals(ele.getName())) {
@@ -166,8 +168,6 @@ public class OpenApiService {
         }
         return null;
     }
-
-//    private static final String COLON = ":";
 
     public Map<String, String> getReqMap() {
         Enumeration<String> parameterNames = request.getParameterNames();

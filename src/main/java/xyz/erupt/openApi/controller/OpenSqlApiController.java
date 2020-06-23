@@ -35,8 +35,10 @@ public class OpenSqlApiController {
     @ResponseBody
     public Object query(@PathVariable("fileName") String fileName,
                         @PathVariable("elementName") String elementName,
-                        @RequestBody(required = false) Map<String, Object> params) {
-        return openApiService.queryByCache(fileName, elementName, sqlOpenApi,params);
+                        @RequestBody(required = false) Map<String, Object> params,
+                        HttpServletRequest request) {
+        request.setAttribute(OpenApiService.REQUEST_BODY_KEY, params);
+        return openApiService.queryByCache(fileName, elementName, sqlOpenApi, params);
     }
 
     @RequestMapping("/modify/{fileName}/{elementName}")
@@ -44,8 +46,10 @@ public class OpenSqlApiController {
     @Transactional
     public Object modify(@PathVariable("fileName") String fileName,
                          @PathVariable("elementName") String elementName,
-                         @RequestBody(required = false) Map<String, Object> params) {
-        return openApiService.modify(fileName, elementName, sqlOpenApi,params);
+                         @RequestBody(required = false) Map<String, Object> params,
+                         HttpServletRequest request) {
+        request.setAttribute(OpenApiService.REQUEST_BODY_KEY, params);
+        return openApiService.modify(fileName, elementName, sqlOpenApi, params);
     }
 
 }

@@ -2,6 +2,7 @@ package xyz.erupt.openApi.service;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
@@ -11,6 +12,7 @@ import org.dom4j.io.SAXReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xyz.erupt.openApi.config.OpenApiConfig;
+import xyz.erupt.openApi.handler.CacheHandler;
 import xyz.erupt.openApi.handler.OpenApiHandler;
 import xyz.erupt.openApi.impl.OpenApi;
 import xyz.erupt.openApi.tag.EleTag;
@@ -21,7 +23,6 @@ import xyz.erupt.openApi.util.OpenApiSpringUtil;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 import javax.servlet.http.HttpServletRequest;
 import java.net.MalformedURLException;
 import java.util.*;
@@ -40,6 +41,8 @@ public class OpenApiService {
 
     @Autowired
     private OpenApiConfig openApiConfig;
+
+    private final ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
 
     public static final String REQUEST_BODY_KEY = "$requestBody";
 
@@ -64,7 +67,7 @@ public class OpenApiService {
             }
         } catch (DocumentException e) {
             if (e.getCause() instanceof MalformedURLException) {
-                throw new NotFountException("not found document");
+                throw new NotFountException("not found " + fileName + " document");
             } else {
                 throw new RuntimeException(e.getMessage());
             }
@@ -81,12 +84,12 @@ public class OpenApiService {
             Attribute cacheAttr = element.attribute(EleTag.CACHE);
             if (null != cacheAttr && openApiConfig.isOpenCache()) {
                 String cacheKey = fileName + "_" + elementName;
-                Cache<String, Object> cache = cacheMap.get(cacheKey);
 //                try {
 //                    CacheHandler cacheHandler = OpenApiSpringUtil.getBeanByPath(openApiConfig.getCacheProvider(), CacheHandler.class);
 //                } catch (ClassNotFoundException e) {
 //                    e.printStackTrace();
 //                }
+                Cache<String, Object> cache = cacheMap.get(cacheKey);
                 if (null == cache) {
                     cache = Caffeine.newBuilder()
                             .initialCapacity(1).maximumSize(100)
@@ -95,8 +98,10 @@ public class OpenApiService {
                     cacheMap.put(fileName + "_" + elementName, cache);
                 }
                 StringBuilder paramKey = new StringBuilder();
-                for (String key : params.keySet()) {
-                    paramKey.append(key).append("=").append(params.get(key)).append("|");
+                if (null != params) {
+                    for (String key : params.keySet()) {
+                        paramKey.append(key).append("=").append(params.get(key)).append("|");
+                    }
                 }
                 return cache.get(paramKey.toString(), (key) -> openApi.query(element, expression, params));
             } else {
@@ -110,7 +115,7 @@ public class OpenApiService {
         Element rootElement = getXmlDocument(fileName).getRootElement();
         Element element = rootElement.element(elementName);
         if (null == element) {
-            throw new NotFountException("not found element");
+            throw new NotFountException("not found " + elementName + " element");
         }
         String expression = parseElement(element);
         OpenApiHandler openApiHandler = getRootHandler(rootElement);
@@ -124,12 +129,13 @@ public class OpenApiService {
         return result;
     }
 
+    @SneakyThrows
     private String parseElement(Element element) {
-        String eval = element.getTextTrim();
+        String content = element.getTextTrim();
         List<Element> list = element.elements();
         if (list.size() > 0) {
-            StringBuilder sb = new StringBuilder(eval);
-            ScriptEngine js = new ScriptEngineManager().getEngineByName("JavaScript");
+            StringBuilder sb = new StringBuilder(content);
+            ScriptEngine js = scriptEngineManager.getEngineByName("JavaScript");
             Object paramObj = request.getAttribute(OpenApiService.REQUEST_BODY_KEY);
             if (paramObj != null) {
                 Map<String, Object> param = (Map<String, Object>) paramObj;
@@ -139,20 +145,19 @@ public class OpenApiService {
             }
             for (Element ele : list) {
                 if (IfTag.NAME.equals(ele.getName())) {
-                    String value = ele.attribute(IfTag.ATTR_TEST).getValue();
-                    try {
-                        Boolean bool = (Boolean) js.eval("!!(" + value + ")");
-                        if (bool) {
+                    Attribute testAttr = ele.attribute(IfTag.ATTR_TEST);
+                    if (null != testAttr) {
+                        if ((Boolean) js.eval("!!(" + testAttr.getValue() + ")")) {
                             sb.append(" ").append(ele.getTextTrim());
                         }
-                    } catch (ScriptException e) {
-                        e.printStackTrace();
+                    } else {
+                        sb.append(" ").append(ele.getTextTrim());
                     }
                 }
             }
             return sb.toString();
         } else {
-            return eval;
+            return content;
         }
     }
 

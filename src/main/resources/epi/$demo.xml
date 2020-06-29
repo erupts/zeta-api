@@ -3,13 +3,13 @@
     <hello-world title="基础使用">
         select 'hello world' $key
     </hello-world>
-    <cache cache="5000" title="使用缓存(cache单位毫秒)">
-        select 'cache',now() now
+    <cache cache="5000" title="使用缓存(cache单位毫秒)" body="{a:1,b:2}">
+        select 'cache' cache,now() now;
     </cache>
     <param title="参数获取与处理">
         select :param param
     </param>
-    <condition title="条件处理">
+    <condition title="条件处理" desc="传递param参数判断与10的关系">
         select
         <if test="param&gt;10">
             'gt 10' param_status

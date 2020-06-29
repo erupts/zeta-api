@@ -29,14 +29,25 @@
         <th>请求地址</th>
         <th>描述 (desc)</th>
         <th>缓存时间 (cache)</th>
+        <th style="width: 100px;">标记</th>
         <th>操作</th>
     </tr>
     <#list root.elements() as ele>
         <tr>
             <td>${ele.attributeValue('title')!ele.name}</td>
-            <td style="color: #3462bf">${domain}/open-api/sql/${ele.attributeValue('type')!'query'}/${fileName}/${ele.name}</td>
+            <td>
+                <a target="_blank" href="${domain}/open-api/sql/${ele.attributeValue('type')!'query'}/${fileName}/${ele.name}">
+                    ${domain}/open-api/sql/${ele.attributeValue('type')!'query'}/${fileName}/${ele.name}
+                </a>
+            </td>
             <td>${ele.attributeValue('desc')!''}</td>
             <td>${ele.attributeValue('cache')!'0'}</td>
+            <td>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="${ele.name}" value="option1">
+                    <label class="form-check-label" for="${ele.name}">标记</label>
+                </div>
+            </td>
             <#--<td><button class="btn btn-primary btn-sm">测试</button></td>-->
         </tr>
     </#list>

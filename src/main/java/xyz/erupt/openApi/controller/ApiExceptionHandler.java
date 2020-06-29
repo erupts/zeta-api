@@ -18,7 +18,7 @@ public class ApiExceptionHandler {
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     @ResponseBody
     public String handleInvalidRequestError(NotFountException e) {
-        return e.getMessage();
+        return "<h1 style='text-align:center'>" + e.getMessage() + "</h1>";
     }
 
 }

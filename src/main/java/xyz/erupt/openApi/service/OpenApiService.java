@@ -12,7 +12,6 @@ import org.dom4j.io.SAXReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xyz.erupt.openApi.config.OpenApiConfig;
-import xyz.erupt.openApi.handler.CacheHandler;
 import xyz.erupt.openApi.handler.OpenApiHandler;
 import xyz.erupt.openApi.impl.OpenApi;
 import xyz.erupt.openApi.tag.EleTag;
@@ -88,7 +87,7 @@ public class OpenApiService {
 //                    CacheHandler cacheHandler = OpenApiSpringUtil.getBeanByPath(openApiConfig.getCacheProvider(), CacheHandler.class);
 //                } catch (ClassNotFoundException e) {
 //                    e.printStackTrace();
-//                }
+//                }z
                 Cache<String, Object> cache = cacheMap.get(cacheKey);
                 if (null == cache) {
                     cache = Caffeine.newBuilder()
@@ -111,7 +110,7 @@ public class OpenApiService {
     }
 
 
-    public Object xmlToQuery(String fileName, String elementName, BiFunction<Element, String, Object> function) {
+    private Object xmlToQuery(String fileName, String elementName, BiFunction<Element, String, Object> function) {
         Element rootElement = getXmlDocument(fileName).getRootElement();
         Element element = rootElement.element(elementName);
         if (null == element) {

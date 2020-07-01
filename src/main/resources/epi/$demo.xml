@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<sql desc="测试接口">
+<demo desc="测试接口">
     <hello-world title="基础使用">
-        select 'hello world' $key
+        select 'hello world' key
     </hello-world>
     <cache cache="5000" title="使用缓存(cache单位毫秒)" body="{a:1,b:2}">
         select 'cache' cache,now() now;
@@ -20,8 +20,11 @@
         <if test="param==10">
             'eq 10' param_status
         </if>
+        <if>
+            ,:param param
+        </if>
     </condition>
     <insert title="插入数据" type="modify">
         insert into demo(content) values (:content)
     </insert>
-</sql>
+</demo>

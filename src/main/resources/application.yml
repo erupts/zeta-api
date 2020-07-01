@@ -1,7 +1,10 @@
-openApi:
+open-api:
   #是否热读取xml配置，生产环境不要开启此功能
   hotReadXml: true
   openCache: true
+  ipWhite:
+    - 127.0.0.1
+    - 192.168.1.1
   #  cacheProvider: xyz.erupt.aa
 open-doc:
   enable: true
@@ -10,13 +13,11 @@ open-doc:
 #    - 192.168.1.1
 spring:
   datasource:
-    url: jdbc:mysql://39.104.174.237:3306/erupt?useUnicode=true&characterEncoding=UTF-8
-    username: erupt
-    password: leLPvYbQQ!27st2FuxtO
+    url: jdbc:h2:mem:test_db
+    driverClassName: org.h2.Driver
+    username: root
+    password: 123456
   jpa:
     show-sql: true
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    hibernate:
-      ddl-auto: update
 server:
   port: 8891

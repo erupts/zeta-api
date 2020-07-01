@@ -34,9 +34,9 @@ public class OpenSqlApiController {
     @RequestMapping("/query/{fileName}/{elementName}")
     @ResponseBody
     public Object query(@PathVariable("fileName") String fileName,
-                        @PathVariable("elementName") String elementName,
-                        @RequestBody(required = false) Map<String, Object> params,
-                        HttpServletRequest request) {
+                         @PathVariable("elementName") String elementName,
+                         @RequestBody(required = false) Map<String, Object> params,
+                         HttpServletRequest request) {
         request.setAttribute(OpenApiService.REQUEST_BODY_KEY, params);
         return openApiService.queryByCache(fileName, elementName, sqlOpenApi, params);
     }

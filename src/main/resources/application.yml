@@ -1,16 +1,12 @@
 open-api:
   #是否热读取xml配置，生产环境不要开启此功能
   hotReadXml: true
-  openCache: true
+  enableCache: true
+  enableApiDoc: true
   ipWhite:
     - 127.0.0.1
     - 192.168.1.1
-  #  cacheProvider: xyz.erupt.aa
-open-doc:
-  enable: true
-#  ipWhite:
-#    - 127.0.0.1
-#    - 192.168.1.1
+#  cacheHandlerPath: xyz.erupt.aa
 spring:
   datasource:
     url: jdbc:h2:mem:test_db

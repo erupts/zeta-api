@@ -6,5 +6,5 @@ package xyz.erupt.openApi.constant;
  */
 public class PathConst {
 
-    public static final String SQL_BASEPATH = "";
+    public static final String OPEN_API = "/open-api";
 }

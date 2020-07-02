@@ -17,14 +17,14 @@ public class OpenApiConfig {
 
     private boolean hotReadXml = false;
 
-    private boolean openCache = true;
+    private boolean enableCache = true;
 
-    private boolean apiDoc = false;
+    private boolean enableApiDoc = false;
 
     private List<String> ipWhite;
 
     private String xmlbasePath = "/epi";
 
-    private String cacheProvider = "xyz.erupt.openApi.handler.CaffeineCacheHandler";
+    private String cacheHandlerPath = "xyz.erupt.openApi.handler.CaffeineCacheHandler";
 
 }

@@ -1,10 +1,14 @@
 package xyz.erupt.openApi.util;
 
+import lombok.SneakyThrows;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 /**
  * @author liyuepeng
@@ -26,15 +30,15 @@ public class OpenApiSpringUtil implements ApplicationContextAware {
         return applicationContext;
     }
 
+    @SneakyThrows
     public static <T> T getBean(Class<T> clazz) {
-        try {
+        if (null != clazz.getDeclaredAnnotation(Component.class)
+                || null != clazz.getDeclaredAnnotation(Service.class)
+                || null != clazz.getDeclaredAnnotation(Repository.class)
+                || null != clazz.getDeclaredAnnotation(Controller.class)) {
             return getApplicationContext().getBean(clazz);
-        } catch (NoSuchBeanDefinitionException e) {
-            try {
-                return clazz.newInstance();
-            } catch (InstantiationException | IllegalAccessException e1) {
-                throw new RuntimeException(e1);
-            }
+        } else {
+            return clazz.newInstance();
         }
     }
 

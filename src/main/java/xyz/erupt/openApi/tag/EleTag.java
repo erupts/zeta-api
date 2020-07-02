@@ -7,4 +7,6 @@ public class EleTag {
 
     public static final String CACHE = "cache";
 
+    public static final String TYPE = "type";
+
 }

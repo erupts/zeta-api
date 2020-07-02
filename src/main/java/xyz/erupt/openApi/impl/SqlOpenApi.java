@@ -9,7 +9,9 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.openApi.util.IpUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,7 +30,7 @@ public class SqlOpenApi implements OpenApi {
 
 
     @Override
-    public Object query(Element element, String sql, Map<String, Object> params) {
+    public List query(Element element, String sql, Map<String, Object> params) {
         log.info(sql);
 //        log.info("[" + new Date() + ":" + IpUtil.getIpAddr(request) + "]" + params);
         return namedTemplate.queryForList(sql, params);

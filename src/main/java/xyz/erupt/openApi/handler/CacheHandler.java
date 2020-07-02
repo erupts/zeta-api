@@ -1,17 +1,15 @@
 package xyz.erupt.openApi.handler;
 
+import java.util.Map;
+
 /**
  * @author liyuepeng
  * @date 2020-06-16
  */
 public interface CacheHandler {
 
-    default void put(String key, Long expire) {
+    void put(String key, Map<String, Object> param, Object value, Long expire);
 
-    }
-
-    default void get(String key) {
-
-    }
+    Object get(String key, Map<String, Object> param);
 
 }

@@ -36,9 +36,9 @@
 ```
 
 ## api文档：  
-http://localhost:8080/api-doc/demo.html  
+http://localhost:8080/open-api/doc/$demo.html
 文档路径格式  
-http://{host}:{port}/api-doc/{文件名}.html    
+http://{host}:{port}/open-api/doc/{文件名}.html
 
 ## 请求已定义接口
-根据文档中的提示使用postman等工具请求即可，参数传递必须使用post json形式
+根据文档中的提示使用postman等工具请求即可，请求类型post,Content-Type: application/json

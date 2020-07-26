@@ -1,4 +1,4 @@
-package xyz.erupt.openApi.util;
+package xyz.erupt.zeta_api.util;
 
 /**
  * @author liyuepeng

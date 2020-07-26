@@ -1,7 +1,5 @@
-package xyz.erupt.openApi.service;
+package xyz.erupt.zeta_api.service;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Attribute;
@@ -12,16 +10,16 @@ import org.dom4j.io.SAXReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import xyz.erupt.openApi.config.OpenApiConfig;
-import xyz.erupt.openApi.handler.CacheHandler;
-import xyz.erupt.openApi.handler.OpenApiHandler;
-import xyz.erupt.openApi.impl.OpenApi;
-import xyz.erupt.openApi.tag.EleTag;
-import xyz.erupt.openApi.tag.IfTag;
-import xyz.erupt.openApi.tag.RootTag;
-import xyz.erupt.openApi.util.IpUtil;
-import xyz.erupt.openApi.util.NotFountException;
-import xyz.erupt.openApi.util.OpenApiSpringUtil;
+import xyz.erupt.zeta_api.config.ZetaApiConfig;
+import xyz.erupt.zeta_api.handler.CacheHandler;
+import xyz.erupt.zeta_api.handler.ZetaApiHandler;
+import xyz.erupt.zeta_api.impl.ZetaApi;
+import xyz.erupt.zeta_api.tag.EleTag;
+import xyz.erupt.zeta_api.tag.IfTag;
+import xyz.erupt.zeta_api.tag.RootTag;
+import xyz.erupt.zeta_api.util.IpUtil;
+import xyz.erupt.zeta_api.util.NotFountException;
+import xyz.erupt.zeta_api.util.ZetaApiSpringUtil;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -30,7 +28,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.net.MalformedURLException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 
 /**
@@ -38,7 +35,7 @@ import java.util.function.BiFunction;
  * @date 2019-12-22
  */
 @Service
-public class OpenApiService {
+public class ZetaApiService {
 
     @Autowired
     private HttpServletRequest request;
@@ -47,7 +44,7 @@ public class OpenApiService {
     private HttpServletResponse response;
 
     @Autowired
-    private OpenApiConfig openApiConfig;
+    private ZetaApiConfig zetaApiConfig;
 
     private final ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
 
@@ -57,39 +54,39 @@ public class OpenApiService {
 
     private Map<String, Document> xmlDocuments = new ConcurrentHashMap<>();
 
-    public Object action(String fileName, String elementName, OpenApi openApi, Map<String, Object> params) {
+    public Object action(String fileName, String elementName, ZetaApi zetaApi, Map<String, Object> params) {
         return xmlToQuery(fileName, elementName, (element, expression) -> {
 //            Attribute typeAttr = element.attribute(EleTag.TYPE);
             if (expression.startsWith(QUERY_FEATURES)) {
                 Attribute cacheAttr = element.attribute(EleTag.CACHE);
-                if (null != cacheAttr && openApiConfig.isEnableCache()) {
+                if (null != cacheAttr && zetaApiConfig.isEnableCache()) {
                     {
                         String cacheKey = fileName + "_" + elementName;
                         CacheHandler cacheHandler = null;
                         try {
-                            cacheHandler = OpenApiSpringUtil.getBeanByPath(openApiConfig.getCacheHandlerPath(), CacheHandler.class);
+                            cacheHandler = ZetaApiSpringUtil.getBeanByPath(zetaApiConfig.getCacheHandlerPath(), CacheHandler.class);
                         } catch (ClassNotFoundException e) {
                             e.printStackTrace();
                         }
                         Object result = cacheHandler.get(cacheKey, params);
                         if (null == result) {
-                            result = openApi.query(element, expression, params);
+                            result = zetaApi.query(element, expression, params);
                             cacheHandler.put(cacheKey, params, result, Long.valueOf(cacheAttr.getValue()));
                         }
                         return result;
                     }
                 } else {
-                    return openApi.query(element, expression, params);
+                    return zetaApi.query(element, expression, params);
                 }
             } else {
-                return openApi.modify(element, expression, params);
+                return zetaApi.modify(element, expression, params);
             }
         });
     }
 
     //    校验ip白名单
     public boolean validateIpWhite() {
-        List<String> ipWhite = openApiConfig.getIpWhite();
+        List<String> ipWhite = zetaApiConfig.getIpWhite();
         if (null != ipWhite && ipWhite.size() > 0) {
             String reqIp = IpUtil.getIpAddr(request);
             boolean ipAllow = false;
@@ -107,15 +104,15 @@ public class OpenApiService {
 
     public Document getXmlDocument(String fileName) {
         try {
-            if (openApiConfig.isHotReadXml()) {
+            if (zetaApiConfig.isHotReadXml()) {
                 return new SAXReader().read(this.getClass().getResourceAsStream(
-                        openApiConfig.getXmlbasePath() + "/" + fileName + ".xml"));
+                        zetaApiConfig.getXmlbasePath() + "/" + fileName + ".xml"));
             } else {
                 if (xmlDocuments.containsKey(fileName)) {
                     return xmlDocuments.get(fileName);
                 } else {
                     Document document = new SAXReader().read(this.getClass().getResourceAsStream(
-                            openApiConfig.getXmlbasePath() + "/" + fileName + ".xml"));
+                            zetaApiConfig.getXmlbasePath() + "/" + fileName + ".xml"));
                     xmlDocuments.put(fileName, document);
                     return document;
                 }
@@ -136,13 +133,13 @@ public class OpenApiService {
             throw new NotFountException("not found " + elementName + " element");
         }
         String expression = parseElement(element);
-        OpenApiHandler openApiHandler = getRootHandler(rootElement);
-        if (null != openApiHandler) {
-            expression = openApiHandler.handler(element, expression);
+        ZetaApiHandler zetaApiHandler = getRootHandler(rootElement);
+        if (null != zetaApiHandler) {
+            expression = zetaApiHandler.handler(element, expression);
         }
         Object result = function.apply(element, expression);
-        if (null != openApiHandler) {
-            return openApiHandler.handlerResult(element, result);
+        if (null != zetaApiHandler) {
+            return zetaApiHandler.handlerResult(element, result);
         }
         return result;
     }
@@ -154,7 +151,7 @@ public class OpenApiService {
         if (list.size() > 0) {
             StringBuilder sb = new StringBuilder(content);
             ScriptEngine js = scriptEngineManager.getEngineByName("JavaScript");
-            Object paramObj = request.getAttribute(OpenApiService.REQUEST_BODY_KEY);
+            Object paramObj = request.getAttribute(ZetaApiService.REQUEST_BODY_KEY);
             if (paramObj != null) {
                 Map<String, Object> param = (Map<String, Object>) paramObj;
                 for (String key : param.keySet()) {
@@ -180,11 +177,11 @@ public class OpenApiService {
     }
 
 
-    private OpenApiHandler getRootHandler(Element element) {
+    private ZetaApiHandler getRootHandler(Element element) {
         Attribute handlerAttr = element.attribute(RootTag.HANDLER);
         if (null != handlerAttr) {
             try {
-                return (OpenApiHandler) OpenApiSpringUtil.getBean(Class.forName(handlerAttr.getValue()));
+                return (ZetaApiHandler) ZetaApiSpringUtil.getBean(Class.forName(handlerAttr.getValue()));
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }

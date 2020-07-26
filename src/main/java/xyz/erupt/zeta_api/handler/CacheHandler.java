@@ -1,4 +1,4 @@
-package xyz.erupt.openApi.handler;
+package xyz.erupt.zeta_api.handler;
 
 import java.util.Map;
 

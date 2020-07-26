@@ -1,10 +1,7 @@
-package xyz.erupt.openApi.util;
-
-import org.springframework.http.HttpStatus;
+package xyz.erupt.zeta_api.util;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
-import java.util.List;
 
 /**
  * @author liyuepeng

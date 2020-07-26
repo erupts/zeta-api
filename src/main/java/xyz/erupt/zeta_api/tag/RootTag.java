@@ -1,4 +1,4 @@
-package xyz.erupt.openApi.tag;
+package xyz.erupt.zeta_api.tag;
 
 /**
  * Created by liyuepeng on 2019-08-15.

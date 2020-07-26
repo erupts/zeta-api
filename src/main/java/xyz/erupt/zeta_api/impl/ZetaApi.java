@@ -1,4 +1,4 @@
-package xyz.erupt.openApi.impl;
+package xyz.erupt.zeta_api.impl;
 
 import org.dom4j.Element;
 
@@ -9,7 +9,7 @@ import java.util.Map;
  * @author liyuepeng
  * @date 2019-12-22
  */
-public interface OpenApi {
+public interface ZetaApi {
 
     Collection query(Element element, String queryStr, Map<String, Object> params);
 

@@ -1,18 +1,12 @@
-package xyz.erupt.openApi.controller;
+package xyz.erupt.zeta_api.controller;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import xyz.erupt.openApi.constant.PathConst;
-import xyz.erupt.openApi.impl.SqlOpenApi;
-import xyz.erupt.openApi.service.OpenApiService;
-import xyz.erupt.openApi.util.IpUtil;
+import xyz.erupt.zeta_api.constant.PathConst;
+import xyz.erupt.zeta_api.impl.SqlZetaApi;
+import xyz.erupt.zeta_api.service.ZetaApiService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,18 +14,18 @@ import java.util.Map;
  * Created by liyuepeng on 2019-08-14.
  */
 @RestController
-@RequestMapping(PathConst.OPEN_API)
-public class OpenSqlApiController {
+@RequestMapping(PathConst.ZETA_API)
+public class ZetaApiSqlController {
 
     @Autowired
-    private SqlOpenApi sqlOpenApi;
+    private SqlZetaApi zetaApi;
 
     @Autowired
-    private OpenApiService openApiService;
+    private ZetaApiService zetaApiService;
 
     /**
      * @param fileName   文件名称
-     * @param sqlElement xml中sql元素
+     * @param elementName xml中sql元素
      * @return result
      */
     @RequestMapping("/sql/{fileName}/{elementName}")
@@ -40,12 +34,12 @@ public class OpenSqlApiController {
                                       @PathVariable("elementName") String elementName,
                                       @RequestBody(required = false) Map<String, Object> params,
                                       HttpServletRequest request) {
-        if (!openApiService.validateIpWhite()) {
+        if (!zetaApiService.validateIpWhite()) {
             return null;
         }
         Map<String, Object> map = new HashMap<>();
-        request.setAttribute(OpenApiService.REQUEST_BODY_KEY, params);
-        map.put("result", openApiService.action(fileName, elementName, sqlOpenApi, params));
+        request.setAttribute(ZetaApiService.REQUEST_BODY_KEY, params);
+        map.put("result", zetaApiService.action(fileName, elementName, zetaApi, params));
         return map;
     }
 

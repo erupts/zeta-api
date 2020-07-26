@@ -1,7 +1,7 @@
 ## 使用方法
 1. 创建spring boot项目
 2. 指定数据库连接信息
-3. 引入open-api
+3. 引入zeta-api
 4. 在资源目录下创建epi文件夹
 5. 在epi目录下创建xml文件
 6. xml文件demo
@@ -36,9 +36,9 @@
 ```
 
 ## api文档：  
-http://localhost:8080/open-api/doc/$demo.html
-文档路径格式  
-http://{host}:{port}/open-api/doc/{文件名}.html
+http://localhost:8080/zeta-api/doc/$demo.html
+####文档路径格式
+http://{host}:{port}/zeta-api/doc/{文件名}.html
 
 ## 请求已定义接口
 根据文档中的提示使用postman等工具请求即可，请求类型post,Content-Type: application/json

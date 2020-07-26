@@ -1,4 +1,4 @@
-package xyz.erupt.openApi.controller;
+package xyz.erupt.zeta_api.controller;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import xyz.erupt.openApi.config.OpenApiConfig;
-import xyz.erupt.openApi.constant.PathConst;
-import xyz.erupt.openApi.service.OpenApiService;
+import xyz.erupt.zeta_api.config.ZetaApiConfig;
+import xyz.erupt.zeta_api.constant.PathConst;
+import xyz.erupt.zeta_api.service.ZetaApiService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,14 +23,14 @@ import java.util.Map;
  * @date 2020-06-16
  */
 @RestController
-@RequestMapping(PathConst.OPEN_API)
+@RequestMapping(PathConst.ZETA_API)
 public class ApiDocument {
 
     @Autowired
-    private OpenApiConfig openApiConfig;
+    private ZetaApiConfig zetaApiConfig;
 
     @Autowired
-    private OpenApiService openApiService;
+    private ZetaApiService zetaApiService;
 
     public static final String DOCUMENT_FTL_PATH = "/api-doc.ftl";
 
@@ -44,16 +44,16 @@ public class ApiDocument {
 
     @GetMapping(value = "/doc/{fileName}.html", produces = "text/html;charset=utf-8")
     public void apiDoc(HttpServletResponse response, HttpServletRequest request, @PathVariable("fileName") String fileName) {
-        if (!openApiConfig.isEnableApiDoc()) {
+        if (!zetaApiConfig.isEnableApiDoc()) {
             response.setStatus(HttpStatus.FORBIDDEN.value());
             return;
         }
-        if (!openApiService.validateIpWhite()) {
+        if (!zetaApiService.validateIpWhite()) {
             return;
         }
         try {
             Template template = cfg.getTemplate(DOCUMENT_FTL_PATH);
-            Document document = openApiService.getXmlDocument(fileName);
+            Document document = zetaApiService.getXmlDocument(fileName);
             if (null != document) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("root", document.getRootElement());

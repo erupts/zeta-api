@@ -1,4 +1,4 @@
-package xyz.erupt.openApi.config;
+package xyz.erupt.zeta_api.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -12,8 +12,8 @@ import java.util.List;
  */
 @Data
 @Component
-@ConfigurationProperties(prefix = "open-api")
-public class OpenApiConfig {
+@ConfigurationProperties(prefix = "zeta-api")
+public class ZetaApiConfig {
 
     private boolean hotReadXml = false;
 
@@ -25,6 +25,6 @@ public class OpenApiConfig {
 
     private String xmlbasePath = "/epi";
 
-    private String cacheHandlerPath = "xyz.erupt.openApi.handler.CaffeineCacheHandler";
+    private String cacheHandlerPath = "xyz.erupt.zeta_api.handler.CaffeineCacheHandler";
 
 }

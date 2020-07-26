@@ -1,16 +1,12 @@
-package xyz.erupt.openApi.impl;
+package xyz.erupt.zeta_api.impl;
 
 import lombok.extern.java.Log;
 import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
-import xyz.erupt.openApi.util.IpUtil;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +16,7 @@ import java.util.Map;
  */
 @Component
 @Log
-public class SqlOpenApi implements OpenApi {
+public class SqlZetaApi implements ZetaApi {
 
     @Autowired
     private HttpServletRequest request;

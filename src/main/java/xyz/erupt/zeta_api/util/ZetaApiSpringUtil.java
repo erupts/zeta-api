@@ -1,8 +1,7 @@
-package xyz.erupt.openApi.util;
+package xyz.erupt.zeta_api.util;
 
 import lombok.SneakyThrows;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
@@ -15,14 +14,14 @@ import org.springframework.stereotype.Service;
  * @date 2019-01-24
  */
 @Component
-public class OpenApiSpringUtil implements ApplicationContextAware {
+public class ZetaApiSpringUtil implements ApplicationContextAware {
 
     private static ApplicationContext applicationContext;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        if (OpenApiSpringUtil.applicationContext == null) {
-            OpenApiSpringUtil.applicationContext = applicationContext;
+        if (ZetaApiSpringUtil.applicationContext == null) {
+            ZetaApiSpringUtil.applicationContext = applicationContext;
         }
     }
 

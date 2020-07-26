@@ -36,8 +36,8 @@
         <tr>
             <td>${ele.attributeValue('title')!ele.name}</td>
             <td>
-                <a target="_blank" href="${domain}/open-api/sql/${fileName}/${ele.name}">
-                    ${domain}/open-api/sql/${fileName}/${ele.name}
+                <a target="_blank" href="${domain}/zeta-api/sql/${fileName}/${ele.name}">
+                    ${domain}/zeta-api/sql/${fileName}/${ele.name}
                 </a>
             </td>
             <td>${ele.attributeValue('desc')!''}</td>

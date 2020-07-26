@@ -1,5 +1,15 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<demo desc="测试接口">
+<?xml version="1.0" encoding="utf-8"?>
+<epi desc="测试接口"
+     xmlns="http://www.w3school.com.cn"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:noNamespaceSchemaLocation="/epi.xsd">
+    <!--所有功能集合-->
+    <test title="title" desc="desc" cache="1000" body="{param:10}">
+        select test,
+        <if test="param&gt;10">
+            'gt 10' param_status
+        </if>
+    </test>
     <hello-world title="基础使用">
         select 'hello world' key
     </hello-world>
@@ -24,7 +34,7 @@
             ,:param param
         </if>
     </condition>
-    <insert title="插入数据" type="modify">
+    <insert title="插入数据">
         insert into demo(content) values (:content)
     </insert>
-</demo>
+</epi>

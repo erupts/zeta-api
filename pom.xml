@@ -13,10 +13,9 @@
     <packaging>jar</packaging>
 
     <groupId>xyz.erupt</groupId>
-    <artifactId>open-api</artifactId>
-    <version>0.3.1</version>
-    <name>erupt-open-api</name>
-    <description>erupt open api</description>
+    <artifactId>zeta-api</artifactId>
+    <version>0.3.2</version>
+    <description>zeta api</description>
 
     <dependencies>
         <dependency>

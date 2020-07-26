@@ -1,4 +1,4 @@
-open-api:
+zeta-api:
   #是否热读取xml配置，生产环境不要开启此功能
   hotReadXml: true
   enableCache: true

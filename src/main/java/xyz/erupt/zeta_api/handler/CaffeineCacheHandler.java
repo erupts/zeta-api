@@ -1,4 +1,4 @@
-package xyz.erupt.openApi.handler;
+package xyz.erupt.zeta_api.handler;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;

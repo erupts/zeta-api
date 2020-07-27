@@ -153,8 +153,8 @@ public class ZetaApiService {
             Object paramObj = request.getAttribute(ZetaApiService.REQUEST_BODY_KEY);
             if (paramObj != null) {
                 Map<String, Object> param = (Map<String, Object>) paramObj;
-                for (String key : param.keySet()) {
-                    js.put(key, param.get(key));
+                for (Map.Entry<String, Object> entry : param.entrySet()) {
+                    js.put(entry.getKey(), entry.getValue());
                 }
             }
             for (Element ele : list) {

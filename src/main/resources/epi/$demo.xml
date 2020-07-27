@@ -4,8 +4,8 @@
      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xsi:noNamespaceSchemaLocation="/epi.xsd">
     <!--所有功能集合-->
-    <test title="title" desc="desc" cache="1000" >
-        select test,
+    <test title="title" desc="desc" cache="1000" body="{param:10}">
+        select 'test',
         <if test="param&gt;10">
             'gt 10' param_status
         </if>
@@ -13,11 +13,11 @@
     <hello-world title="基础使用">
         select 'hello world' key
     </hello-world>
-    <cache cache="5000" title="使用缓存(cache单位毫秒)" body="{a:1,b:2}">
+    <cache cache="5000" title="使用缓存(cache单位毫秒)">
         select 'cache' cache,now() now;
     </cache>
-    <param title="参数获取与处理">
-        select :param param
+    <param title="参数获取与处理" body="{param1:'p1',param2:'p2',param3:'p3'}">
+        select :param1 param1,:param2 param2,:param3 param3,
     </param>
     <condition title="条件处理" desc="传递param参数判断与10的关系" body="{param:10}">
         select
@@ -34,7 +34,7 @@
             ,:param param
         </if>
     </condition>
-    <insert title="插入数据">
+    <insert title="插入数据" body="{content:'xxxx'}">
         insert into demo(content) values (:content)
     </insert>
 </epi>

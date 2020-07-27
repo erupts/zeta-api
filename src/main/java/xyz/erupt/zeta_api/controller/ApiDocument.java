@@ -32,7 +32,7 @@ public class ApiDocument {
     @Autowired
     private ZetaApiService zetaApiService;
 
-    public static final String DOCUMENT_FTL_PATH = "/api-doc.ftl";
+    private static final String DOCUMENT_FTL_PATH = "/zeta-doc.ftl";
 
     private static Configuration cfg;
 

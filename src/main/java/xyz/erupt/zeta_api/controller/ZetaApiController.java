@@ -15,7 +15,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping(PathConst.ZETA_API)
-public class ZetaApiSqlController {
+public class ZetaApiController {
 
     @Autowired
     private SqlZetaApi zetaApi;

@@ -4,7 +4,7 @@
      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xsi:noNamespaceSchemaLocation="/epi.xsd">
     <!--所有功能集合-->
-    <test title="title" desc="desc" cache="1000" body="{param:10}">
+    <test title="title" desc="desc" cache="1000" >
         select test,
         <if test="param&gt;10">
             'gt 10' param_status
@@ -19,7 +19,7 @@
     <param title="参数获取与处理">
         select :param param
     </param>
-    <condition title="条件处理" desc="传递param参数判断与10的关系">
+    <condition title="条件处理" desc="传递param参数判断与10的关系" body="{param:10}">
         select
         <if test="param&gt;10">
             'gt 10' param_status

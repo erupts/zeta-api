@@ -89,7 +89,6 @@ public class ZetaApiService {
         List<String> ipWhite = zetaApiConfig.getIpWhite();
         if (null != ipWhite && ipWhite.size() > 0) {
             String reqIp = IpUtil.getIpAddr(request);
-            boolean ipAllow = false;
             for (String ip : ipWhite) {
                 if (ip.equals(reqIp)) {
                     return true;

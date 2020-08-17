@@ -35,6 +35,13 @@
 </sql>
 ```
 
+##特性
+1. 自定义缓存策略
+2. 支持if标签
+3. 动态参数
+4. handler访问拦截
+5. 
+
 ## api文档：  
 http://localhost:8080/zeta-api/doc/$demo.html
 ####文档路径格式

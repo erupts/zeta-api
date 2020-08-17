@@ -26,7 +26,10 @@ import javax.script.ScriptEngineManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.MalformedURLException;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 
@@ -161,7 +164,7 @@ public class ZetaApiService {
                 if (IfTag.NAME.equals(ele.getName())) {
                     Attribute testAttr = ele.attribute(IfTag.ATTR_TEST);
                     if (null != testAttr) {
-                        if ((Boolean) js.eval("!!(" + testAttr.getValue() + ")")) {
+                        if ((Boolean) js.eval(String.format("!!(%s)", testAttr.getValue()))) {
                             sb.append(" ").append(ele.getTextTrim());
                         }
                     } else {

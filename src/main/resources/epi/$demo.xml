@@ -10,6 +10,9 @@
             'gt 10' param_status
         </if>
     </test>
+    <limit body="{limit:1}">
+        select 'a' limit :limit
+    </limit>
     <hello-world title="基础使用">
         select 'hello world' key
     </hello-world>

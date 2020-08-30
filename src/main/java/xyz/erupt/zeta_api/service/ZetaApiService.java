@@ -11,11 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import xyz.erupt.zeta_api.config.ZetaApiConfig;
+import xyz.erupt.zeta_api.constant.TagConst;
 import xyz.erupt.zeta_api.handler.CacheHandler;
 import xyz.erupt.zeta_api.handler.ZetaApiHandler;
 import xyz.erupt.zeta_api.impl.ZetaApi;
 import xyz.erupt.zeta_api.tag.EleTag;
-import xyz.erupt.zeta_api.tag.IfTag;
 import xyz.erupt.zeta_api.tag.RootTag;
 import xyz.erupt.zeta_api.util.IpUtil;
 import xyz.erupt.zeta_api.util.NotFountException;
@@ -161,8 +161,8 @@ public class ZetaApiService {
                 }
             }
             for (Element ele : list) {
-                if (IfTag.NAME.equals(ele.getName())) {
-                    Attribute testAttr = ele.attribute(IfTag.ATTR_TEST);
+                if (TagConst.IfTag.NAME.equals(ele.getName())) {
+                    Attribute testAttr = ele.attribute(TagConst.IfTag.ATTR_TEST);
                     if (null != testAttr) {
                         if ((Boolean) js.eval(String.format("!!(%s)", testAttr.getValue()))) {
                             sb.append(" ").append(ele.getTextTrim());

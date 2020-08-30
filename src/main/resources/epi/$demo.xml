@@ -4,25 +4,36 @@
      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xsi:noNamespaceSchemaLocation="/epi.xsd">
     <!--所有功能集合-->
-    <test title="title" desc="desc" cache="1000" body="{param:10}">
+    <aa>
+        <if test="">
+
+        </if>
+    </aa>
+    <test title="title" desc="desc" cache="1000">
+        <param key="param" default="100"/>
         select 'test',
         <if test="param&gt;10">
             'gt 10' param_status
         </if>
     </test>
-    <limit body="{limit:1}">
-        select 'a' limit :limit
-    </limit>
+    <bool>
+        <param key="bool" default="false"/>
+        select :bool b
+    </bool>
     <hello-world title="基础使用">
         select 'hello world' key
     </hello-world>
     <cache cache="5000" title="使用缓存(cache单位毫秒)">
         select 'cache' cache,now() now;
     </cache>
-    <param title="参数获取与处理" body="{param1:'p1',param2:'p2',param3:'p3'}">
+    <param title="参数获取与处理">
+        <param key="param1" default="p1" title="参数1"/>
+        <param key="param2" default="p2" title="参数2"/>
+        <param key="param3"/>
         select :param1 param1,:param2 param2,:param3 param3,
     </param>
-    <condition title="条件处理" desc="传递param参数判断与10的关系" body="{param:10}">
+    <condition title="条件处理" desc="传递param参数判断与10的关系">
+        <param key="param" default="100"/>
         select
         <if test="param&gt;10">
             'gt 10' param_status
@@ -37,7 +48,8 @@
             ,:param param
         </if>
     </condition>
-    <insert title="插入数据" body="{content:'xxxx'}">
+    <insert title="插入数据">
+        <param key="content" default="23333"/>
         insert into demo(content) values (:content)
     </insert>
 </epi>

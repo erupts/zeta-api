@@ -24,70 +24,57 @@
         table td {
             vertical-align: middle !important;;
         }
+
+        pre {
+            margin-bottom: 0;
+            color: inherit;
+        }
     </style>
 </head>
 <body>
 <div id="main">
-    <table class="table table-hover table-bordered table-dark">
-        <#if root.attributeValue('desc')??>
-            <tr>
-                <th colspan="10">
-                    ${root.attributeValue('desc')}
-                </th>
-            </tr>
-        </#if>
+    <table class="table table-hover table-bordered table-dark" v-if="root">
+        <tr>
+            <th colspan="10">
+                {{root.desc}}
+            </th>
+        </tr>
         <tr>
             <th colspan="10">
                 <span class="badge badge-primary">POST</span>&nbsp;( Content-Type: <span
-                        class="text-warning">application/json</span> )
+                    class="text-warning">application/json</span> )
             </th>
         </tr>
         <tr>
             <th>#</th>
             <th>接口名称 (title)</th>
             <th>请求地址</th>
-            <#--<th>参数</th>-->
+            <th>参数</th>
             <th>描述 (desc)</th>
             <th>缓存时间 (cache)</th>
             <th class="text-center" style="width: 100px;">操作</th>
+            <th class="text-center" style="width: 50px;">标记</th>
         </tr>
-        <#list root.elements() as ele>
-            <#assign path="${domain}/zeta-api/sql/${fileName}/${ele.name}"/>
-            <tr>
-                <td>${ele_index+1}</td>
-                <td>${ele.attributeValue('title')!ele.name}</td>
-                <td>
-                    <a target="_blank" href="${path}">
-                        ${path}
-                    </a>
-                </td>
-                <#--<td>${ele.attributeValue('body')!''}</td>-->
-                <td>${ele.attributeValue('desc')!''}</td>
-                <td class="text-center">${ele.attributeValue('cache')!'0'}</td>
-                <td class="text-center">
-                    <#if ele.attributeValue('body')??>
-                        <button class="btn btn-outline-warning btn-sm" @click="req({
-                    body: ${ele.attributeValue('body')},
-                    path:'${path}'
-                    })">
-                            Test
-                        </button>
-                    </#if>
-                    <#--<button class="btn btn-primary btn-sm" @click="req({-->
-                    <#--body: ${ele.attributeValue('body')!'null'},-->
-                    <#--path:'${path}'-->
-                    <#--})">-->
-                    <#--<svg class="bi bi-lightning" width="1em" height="1em" viewBox="0 0 16 16"-->
-                    <#--fill="currentColor"-->
-                    <#--xmlns="http://www.w3.org/2000/svg">-->
-                    <#--<path fill-rule="evenodd"-->
-                    <#--d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09zM4.157 8.5H7a.5.5 0 0 1 .478.647L6.11 13.59l5.732-6.09H9a.5.5 0 0 1-.478-.647L9.89 2.41 4.157 8.5z"/>-->
-                    <#--</svg>-->
-                    <#--Test-->
-                    <#--</button>-->
-                </td>
-            </tr>
-        </#list>
+        <tr v-for="(ele,index) in root.elements" :style="{background: ele.tag}">
+            <td>{{index+1}}</td>
+            <td>{{ele.title||ele.name}}</td>
+            <td>
+                <a :href="ele.path" target="_blank">{{ele.path}}</a>
+            </td>
+            <td>
+                <pre>{{ele.body}}</pre>
+            </td>
+            <td>{{ele.desc}}</td>
+            <td class="text-center">{{ele.cache}}</td>
+            <td class="text-center">
+                <button class="btn btn-outline-warning btn-sm" @click="reqTest(ele)">
+                    Test
+                </button>
+            </td>
+            <td>
+                <input type="color" @change="elementTag(index)" v-model.lazy="ele.tag">
+            </td>
+        </tr>
     </table>
 
     <!-- Modal -->
@@ -101,10 +88,10 @@
                     </button>
                 </div>
                 <div class="modal-body" v-if="currApi">
-                    <div class="form-group row" v-for="(p,key) in currApi.body">
-                        <label for="inputPassword" class="col-sm-2 col-form-label">{{key}}:</label>
+                    <div class="form-group row" v-for="(p,index) in currApi.params">
+                        <label class="col-sm-2 col-form-label">{{p.title||p.key}}:</label>
                         <div class="col-sm-10">
-                            <input class="form-control" v-model="currApi.body[key]">
+                            <input class="form-control" v-model="currApi.params[index].value">
                         </div>
                     </div>
                     <pre v-if="result" :style="result.success?'color: #fff':'color: #f00'"
@@ -123,32 +110,69 @@
 <script src="/bootstrap.min.js"></script>
 <script src="/vue.min.js"></script>
 <script>
+    var tagKey = "zeta-tag:";
     var vue = new Vue({
         el: '#main',
         data: {
+            root: null,
+            fileName: null,
             value: true,
             currApi: null,
             result: null,
             querying: false
         },
+        mounted: function () {
+            var that = this;
+            var pn = location.pathname.split("/");
+            this.fileName = pn[pn.length - 1].split(".html")[0];
+            $.get("/zeta-api/build/doc/" + this.fileName, function (res) {
+                rootProcess.call(that, res);
+            });
+
+            function rootProcess(res) {
+                for (var i in res.elements) {
+                    var ele = res.elements[i];
+                    ele.tag = localStorage.getItem(tagKey + ele.name)
+                    if (ele.params) {
+                        var pm = {};
+                        for (var p in ele.params) {
+                            var param = ele.params[p];
+                            console.log(param);
+                            pm[param.key] = param.value;
+                        }
+                        ele.body = JSON.stringify(pm, null, 2);
+                    }
+                }
+                this.root = res;
+            }
+        },
         methods: {
-            req: function (data) {
+            elementTag: function (index) {
+                var ele = this.root.elements[index];
+                console.log(this.root.elements[index].tag)
+                localStorage.setItem(tagKey + ele.name, this.root.elements[index].tag)
+            },
+            reqTest: function (data) {
                 this.result = null;
                 this.currApi = data;
-                $('#reqModal').modal('show')
+                $('#reqModal').modal('show');
+                if (!data.body) {
+                    this.send()
+                }
             },
             send: function () {
                 var that = this;
-                // for (var key in this.currApi.body) {
-                //     if (!this.currApi.body[key]) {
-                //         return;
-                //     }
-                // }
+                var reqParams = {};
+                for (var key in this.currApi.params) {
+                    var param = this.currApi.params[key];
+                    reqParams[param.key] = param.value;
+                }
                 this.querying = true;
+                console.log(this.currApi.path);
                 $.ajax({
                     type: 'POST',
                     url: this.currApi.path,
-                    data: JSON.stringify(this.currApi.body),
+                    data: JSON.stringify(reqParams),
                     contentType: "application/json",
                     success: function (res) {
                         that.result = null;

@@ -40,11 +40,11 @@
 2. 支持if标签
 3. 动态参数
 4. handler访问拦截
-5. 
+5. 文档自动生成
 
 ## api文档：  
 http://localhost:8080/zeta-api/doc/$demo.html
-####文档路径格式
+#### 文档路径格式
 http://{host}:{port}/zeta-api/doc/{文件名}.html
 
 ## 请求已定义接口

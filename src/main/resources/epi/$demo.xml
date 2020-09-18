@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<epi desc="测试接口"
+<epi
      xmlns="http://www.w3school.com.cn"
      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     desc="演示文档"
      xsi:noNamespaceSchemaLocation="/epi.xsd">
     <!--所有功能集合-->
-    <aa>
-        <if test="">
-
-        </if>
-    </aa>
     <test title="title" desc="desc" cache="1000">
         <param key="param" default="100"/>
         select 'test',

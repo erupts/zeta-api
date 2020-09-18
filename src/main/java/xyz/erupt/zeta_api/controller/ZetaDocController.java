@@ -2,6 +2,7 @@ package xyz.erupt.zeta_api.controller;
 
 import lombok.SneakyThrows;
 import lombok.extern.java.Log;
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,7 +111,8 @@ public class ZetaDocController {
                 eleList.add(eleMap);
             }
             map.put("elements", eleList);
-            map.put("desc", rootElement.attributeValue("desc"));
+            String desc = rootElement.attributeValue("desc");
+            map.put("desc", StringUtils.isNotBlank(desc) ? desc : fileName);
             map.put("fileName", fileName);
             return map;
         } else {

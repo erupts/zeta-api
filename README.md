@@ -1,4 +1,4 @@
-原理繁琐的三层架构，化繁为简，简单sql语句轻松搞定http接口开发
+替换繁琐的三层架构，化繁为简，简单sql语句轻松搞定http接口开发
 
 ## 框架特性
 1. 支持缓存，在标签中添加cache属性即可，缓存实现方式caffeine，也可通过实现xyz.erupt.zeta_api.handler.ZetaCache接口，来自定义缓存实现

@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import xyz.erupt.zeta_api.config.ZetaApiConfig;
 import xyz.erupt.zeta_api.constant.TagConst;
-import xyz.erupt.zeta_api.handler.CacheHandler;
+import xyz.erupt.zeta_api.handler.ZetaCache;
 import xyz.erupt.zeta_api.handler.ZetaApiHandler;
 import xyz.erupt.zeta_api.impl.ZetaApi;
 import xyz.erupt.zeta_api.tag.EleTag;
@@ -65,9 +65,9 @@ public class ZetaApiService {
                 if (null != cacheAttr && zetaApiConfig.isEnableCache()) {
                     {
                         String cacheKey = fileName + "_" + elementName;
-                        CacheHandler cacheHandler = null;
+                        ZetaCache cacheHandler = null;
                         try {
-                            cacheHandler = ZetaApiSpringUtil.getBeanByPath(zetaApiConfig.getCacheHandlerPath(), CacheHandler.class);
+                            cacheHandler = ZetaApiSpringUtil.getBeanByPath(zetaApiConfig.getCacheHandlerPath(), ZetaCache.class);
                         } catch (ClassNotFoundException e) {
                             e.printStackTrace();
                         }

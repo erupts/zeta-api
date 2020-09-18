@@ -6,7 +6,7 @@ import java.util.Map;
  * @author liyuepeng
  * @date 2020-06-16
  */
-public interface CacheHandler {
+public interface ZetaCache {
 
     void put(String key, Map<String, Object> param, Object value, Long expire);
 

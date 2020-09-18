@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2020-06-16
  */
 @Service
-public class CaffeineCacheHandler implements CacheHandler {
+public class CaffeineCacheHandler implements ZetaCache {
 
     private final Map<String, Cache<String, Object>> cacheMap = new ConcurrentHashMap<>();
 

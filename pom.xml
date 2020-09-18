@@ -14,7 +14,7 @@
 
     <groupId>xyz.erupt</groupId>
     <artifactId>zeta-api</artifactId>
-    <version>0.3.2</version>
+    <version>0.3.4</version>
     <description>zeta api</description>
 
     <dependencies>
@@ -44,10 +44,6 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.freemarker</groupId>
-            <artifactId>freemarker</artifactId>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>

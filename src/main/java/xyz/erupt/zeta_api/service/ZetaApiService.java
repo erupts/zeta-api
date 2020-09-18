@@ -60,7 +60,7 @@ public class ZetaApiService {
     public Object action(String fileName, String elementName, ZetaApi zetaApi, Map<String, Object> params) {
         return xmlToQuery(fileName, elementName, (element, expression) -> {
 //            Attribute typeAttr = element.attribute(EleTag.TYPE);
-            if (expression.startsWith(QUERY_FEATURES)) {
+            if (expression.startsWith(QUERY_FEATURES) || expression.startsWith(QUERY_FEATURES.toUpperCase())) {
                 Attribute cacheAttr = element.attribute(EleTag.CACHE);
                 if (null != cacheAttr && zetaApiConfig.isEnableCache()) {
                     {

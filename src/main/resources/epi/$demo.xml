@@ -49,7 +49,7 @@
         </if>
     </condition>
     <insert title="插入数据">
-        <param key="content" default="23333"/>
+        <param key="content" title="内容" default="23333"/>
         insert into demo(content) values (:content)
     </insert>
 </epi>

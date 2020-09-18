@@ -17,6 +17,7 @@
             color: #fff;
             padding: 10px;
             border-radius: .25rem;
+            max-height: 500px;
             /*white-space: pre-wrap;*/
             /*word-wrap: break-word;*/
         }
@@ -89,8 +90,8 @@
                 </div>
                 <div class="modal-body" v-if="currApi">
                     <div class="form-group row" v-for="(p,index) in currApi.params">
-                        <label class="col-sm-2 col-form-label">{{p.title||p.key}}:</label>
-                        <div class="col-sm-10">
+                        <label class="col-sm-3 col-form-label">{{p.title||p.key}}:</label>
+                        <div class="col-sm-9">
                             <input class="form-control" v-model="currApi.params[index].value">
                         </div>
                     </div>

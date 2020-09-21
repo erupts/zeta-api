@@ -61,6 +61,8 @@ zeta-api:
   enableApiDoc: true
   #自定义缓存实现，需实现xyz.erupt.zeta_api.handler.ZetaCache接口
   #cacheHandlerPath: xxx
+  #是否打印sql语句
+  showSql: true
   #访问白名单，不填表示不建立
   ipWhite:
     - 127.0.0.1

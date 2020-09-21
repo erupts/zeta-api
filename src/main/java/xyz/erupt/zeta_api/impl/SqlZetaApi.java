@@ -18,8 +18,6 @@ import java.util.Map;
 @Log
 public class SqlZetaApi implements ZetaApi {
 
-    @Autowired
-    private HttpServletRequest request;
 
     @Autowired
     private NamedParameterJdbcTemplate namedTemplate;
@@ -28,7 +26,6 @@ public class SqlZetaApi implements ZetaApi {
     @Override
     public List query(Element element, String sql, Map<String, Object> params) {
         log.info(sql);
-//        log.info("[" + new Date() + ":" + IpUtil.getIpAddr(request) + "]" + params);
         return namedTemplate.queryForList(sql, params);
     }
 

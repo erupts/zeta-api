@@ -25,6 +25,8 @@ public class ZetaApiConfig {
 
     private String xmlbasePath = "/epi";
 
+    private boolean showSql = true;
+
     private String cacheHandlerPath = "xyz.erupt.zeta_api.handler.CaffeineCacheHandler";
 
 }

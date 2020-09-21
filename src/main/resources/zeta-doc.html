@@ -2,7 +2,7 @@
 <head>
     <title>api document</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link rel="stylesheet" href="/bootstrap.min.css">
+    <link rel="stylesheet" href="../../zeta-assets/bootstrap.min.css">
     <style>
         * {
             font-family: "Courier New";
@@ -110,9 +110,9 @@
         </div>
     </div>
 </div>
-<script src="assets/jquery.min.js"></script>
-<script src="assets/bootstrap.min.js"></script>
-<script src="assets/vue.min.js"></script>
+<script src="../../zeta-assets/jquery.min.js"></script>
+<script src="../../zeta-assets/bootstrap.min.js"></script>
+<script src="../../zeta-assets/vue.min.js"></script>
 <script>
     var tagKey = "zeta-tag:";
     var vue = new Vue({
@@ -130,7 +130,7 @@
             var that = this;
             var pn = location.pathname.split("/");
             this.fileName = pn[pn.length - 1].split(".html")[0];
-            $.get("/zeta-api/build/doc/" + this.fileName, function (res) {
+            $.get("../../zeta-api/build/doc/" + this.fileName, function (res) {
                 rootProcess.call(that, res);
             }).fail(function (e) {
                 if (e.status !== 200) {

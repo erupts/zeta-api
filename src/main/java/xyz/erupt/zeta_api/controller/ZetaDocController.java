@@ -33,7 +33,7 @@ import java.util.*;
  */
 @Log
 @RestController
-@RequestMapping(PathConst.ZETA_API)
+@RequestMapping(PathConst.ZETA_DOC)
 public class ZetaDocController {
 
     @Autowired
@@ -57,7 +57,7 @@ public class ZetaDocController {
     }
 
     @SneakyThrows
-    @GetMapping(value = "/doc/{fileName}.html", produces = "text/html;charset=utf-8")
+    @GetMapping(value = "/{fileName}.html", produces = "text/html;charset=utf-8")
     public String doc(HttpServletResponse response, HttpServletRequest request,
                       @PathVariable("fileName") String fileName) {
         InputStream stream = ZetaDocController.class.getResourceAsStream(DOCUMENT_PATH);
@@ -88,11 +88,10 @@ public class ZetaDocController {
             List<Map<String, Object>> eleList = new ArrayList<>();
             Map<String, Object> eleMap;
             Element rootElement = document.getRootElement();
-            String domain = request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getServletPath()));
             for (Element element : document.getRootElement().elements()) {
                 eleMap = new HashMap<>();
                 eleMap.put("name", element.getName());
-                eleMap.put("path", domain + PathConst.ZETA_API + "/sql/" + fileName + "/" + element.getName());
+                eleMap.put("path", PathConst.ZETA_API + "/sql/" + fileName + "/" + element.getName());
                 eleMap.put(EleTag.CACHE, element.attributeValue(EleTag.CACHE));
                 eleMap.put(EleTag.TITLE, element.attributeValue(EleTag.TITLE));
                 eleMap.put(EleTag.DESC, element.attributeValue(EleTag.DESC));
@@ -110,10 +109,11 @@ public class ZetaDocController {
                 }
                 eleList.add(eleMap);
             }
-            map.put("elements", eleList);
             String desc = rootElement.attributeValue("desc");
             map.put("desc", StringUtils.isNotBlank(desc) ? desc : fileName);
+            map.put("elements", eleList);
             map.put("fileName", fileName);
+            map.put("domain", request.getRequestURL().toString().split(PathConst.ZETA_DOC)[0]);
             return map;
         } else {
             response.setStatus(HttpStatus.NOT_FOUND.value());

@@ -2,7 +2,7 @@
 <head>
     <title>api document</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link rel="stylesheet" href="../../zeta-assets/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap.min.css">
     <style>
         * {
             font-family: "Courier New";
@@ -45,6 +45,11 @@
         </tr>
         <tr>
             <th colspan="10">
+                <span class="badge badge-success">Domain</span>&nbsp;{{root.domain}}
+            </th>
+        </tr>
+        <tr>
+            <th colspan="10">
                 <span class="badge badge-primary">POST</span>&nbsp;( Content-Type: <span
                     class="text-warning">application/json</span> )
             </th>
@@ -55,7 +60,7 @@
             <th>请求地址</th>
             <th>参数 &lt;param&gt;</th>
             <th>描述 (desc)</th>
-            <th>缓存时间 (cache)</th>
+            <th>缓存时间【毫秒】(cache)</th>
             <th class="text-center" style="width: 100px;">操作</th>
             <th class="text-center" style="width: 50px;">标记</th>
         </tr>
@@ -63,7 +68,7 @@
             <td>{{index+1}}</td>
             <td>{{ele.title||ele.name}}</td>
             <td>
-                <a :href="ele.path" target="_blank">{{ele.path}}</a>
+                <a :href="root.domain + ele.path" target="_blank">{{ele.path}}</a>
             </td>
             <td>
                 <pre>{{ele.body}}</pre>
@@ -110,9 +115,9 @@
         </div>
     </div>
 </div>
-<script src="../../zeta-assets/jquery.min.js"></script>
-<script src="../../zeta-assets/bootstrap.min.js"></script>
-<script src="../../zeta-assets/vue.min.js"></script>
+<script src="jquery.min.js"></script>
+<script src="bootstrap.min.js"></script>
+<script src="vue.min.js"></script>
 <script>
     var tagKey = "zeta-tag:";
     var vue = new Vue({
@@ -130,7 +135,7 @@
             var that = this;
             var pn = location.pathname.split("/");
             this.fileName = pn[pn.length - 1].split(".html")[0];
-            $.get("../../zeta-api/build/doc/" + this.fileName, function (res) {
+            $.get("build/doc/" + this.fileName, function (res) {
                 rootProcess.call(that, res);
             }).fail(function (e) {
                 if (e.status !== 200) {
@@ -178,7 +183,7 @@
                 this.querying = true;
                 $.ajax({
                     type: 'POST',
-                    url: this.currApi.path,
+                    url: this.root.domain + this.currApi.path,
                     data: JSON.stringify(reqParams),
                     contentType: "application/json",
                     success: function (res) {

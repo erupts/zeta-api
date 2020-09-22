@@ -113,7 +113,7 @@ public class ZetaDocController {
             map.put("desc", StringUtils.isNotBlank(desc) ? desc : fileName);
             map.put("elements", eleList);
             map.put("fileName", fileName);
-            map.put("domain", request.getRequestURL().toString().split(PathConst.ZETA_DOC)[0]);
+            map.put("domain", zetaApiConfig.getDomain() != null ? zetaApiConfig.getDomain() : request.getRequestURL().toString().split(PathConst.ZETA_DOC)[0]);
             return map;
         } else {
             response.setStatus(HttpStatus.NOT_FOUND.value());

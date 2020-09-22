@@ -21,6 +21,8 @@ public class ZetaApiConfig {
 
     private boolean enableApiDoc = false;
 
+    private String domain;
+
     private List<String> ipWhite;
 
     private String xmlbasePath = "/epi";

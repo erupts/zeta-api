@@ -10,9 +10,11 @@
 1. 创建spring boot项目
 2. 指定数据库连接信息
 3. 加入zeta-api依赖
-4. 在资源目录下创建epi文件夹
-5. 在epi目录下创建xml文件
-6. xml文件示例
+4. 入口类设置注解扫描路径
+@SpringBootApplication(scanBasePackages = "xyz.erupt")
+5. 在资源目录下创建epi文件夹
+6. 在epi目录下创建xml文件
+7. xml文件示例
 ```
 <?xml version="1.0" encoding="utf-8" ?>
 <zeta desc="zeta接口示例">
@@ -45,9 +47,9 @@
     </insert>
 </zeta>
 ```
-7. 启动项目
-8. 访问文档,查看已创建接口
-文档路径：http://${host}/zeta-api/doc/${xml文件名}.html
+8. 启动项目
+9. 访问文档,查看已创建接口
+文档路径：http://${host}/zeta-doc/${xml文件名}.html
 
 
 ## application.yml配置项说明

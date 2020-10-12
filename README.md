@@ -1,20 +1,20 @@
-替换繁琐的三层架构，化繁为简，简单sql语句轻松搞定http接口开发
+### 配置xml标签快速创建http接口
 
 ## 框架特性
-1. 支持缓存，在标签中添加cache属性即可，缓存实现方式caffeine，也可通过实现xyz.erupt.zeta_api.handler.ZetaCache接口，来自定义缓存实现
-2. 支持条件判断，仅需在标签中使用if标签即可，if标签test属性支持javaScript表达式
-3. handler访问拦截，可通过
-4. Api文档动态生成，修改xml标签内容，即可展示接口文档信息
+1. 支持caffeine缓存，也可自定义缓存策略
+2. 支持if条件判断，且if判断支持Js脚本
+3. 支持访问拦截，可通过拦截器修改表达式与返回结果
+4. 动态生成Api文档，可快捷查看与测试接口
 
 ## 使用方法
 1. 创建spring boot项目
 2. 指定数据库连接信息
-3. 加入zeta-api依赖
+3. 添加zeta-api依赖
 4. 入口类设置注解扫描路径
 @SpringBootApplication(scanBasePackages = "xyz.erupt")
-5. 在资源目录下创建epi文件夹
-6. 在epi目录下创建xml文件
-7. xml文件示例
+5. 在resources目录下创建epi文件夹
+6. 在epi目录下创建xml格式文件
+7. xml文件示范例
 ```
 <?xml version="1.0" encoding="utf-8" ?>
 <zeta desc="zeta接口示例">
@@ -48,7 +48,7 @@
 </zeta>
 ```
 8. 启动项目
-9. 访问文档,查看已创建接口
+9. 访问接口文档,查看已创建接口
 文档路径：http://${host}/zeta-doc/${xml文件名}.html
 
 

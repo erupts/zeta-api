@@ -5,8 +5,8 @@ import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
+import xyz.erupt.zeta_api.config.ZetaApiConfig;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -22,16 +22,22 @@ public class SqlZetaApi implements ZetaApi {
     @Autowired
     private NamedParameterJdbcTemplate namedTemplate;
 
+    @Autowired
+    private ZetaApiConfig zetaApiConfig;
 
     @Override
     public List query(Element element, String sql, Map<String, Object> params) {
-        log.info(sql);
+        if (zetaApiConfig.isShowSql()){
+            log.info(sql);
+        }
         return namedTemplate.queryForList(sql, params);
     }
 
     @Override
     public Object modify(Element element, String sql, Map<String, Object> params) {
-        log.info(sql);
+        if (zetaApiConfig.isShowSql()){
+            log.info(sql);
+        }
         return namedTemplate.update(sql, params);
 //        try {
 //            return namedTemplate.update(sql, params);

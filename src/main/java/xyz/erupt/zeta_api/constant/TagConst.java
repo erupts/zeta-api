@@ -6,7 +6,7 @@ package xyz.erupt.zeta_api.constant;
  */
 public class TagConst {
 
-    public class ParamTag {
+    public static class ParamTag {
         public static final String NAME = "param";
 
         public static final String ATTR_KEY = "key";
@@ -16,7 +16,7 @@ public class TagConst {
         public static final String ATTR_DEFAULT_VALUE = "default";
     }
 
-    public class IfTag {
+    public static class IfTag {
         public static final String NAME = "if";
 
         public static final String ATTR_TEST = "test";

@@ -21,28 +21,32 @@
     <hello-world title="基础使用">
         select 'hello world' $key
     </hello-world>
+
     <cache cache="5000" title="使用缓存(cache单位毫秒)">
         select 'cache',now() now
     </cache>
+
     <params title="参数获取与处理">
-        <param key="param" default="hellow zeta"/>
+        <param key="param" default="hellow zeta" title="返回值"/>
         select :param param
     </params>
+
     <condition title="条件处理">
-        <param key="param" default=""/>
+        <param key="param" default="" title="数值"/>
         select
-        <if test="param&gt;10">
+        <if test="param > 10">
             'gt 10' param_status
         </if>
-        <if test="param&lt;10">
+        <if test="param < 10">
             'lt 10' param_status
         </if>
-        <if test="param==10">
+        <if test="param == 10">
             'eq 10' param_status
         </if>
     </condition>
+
     <insert title="插入数据">
-        <param key="content" default=""/>
+        <param key="content" title="待插入数据"/>
         insert into demo(content) values (:content)
     </insert>
 </zeta>

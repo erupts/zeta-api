@@ -30,10 +30,14 @@
             margin-bottom: 0;
             color: inherit;
         }
+
+        [v-cloak] {
+            display: none;
+        }
     </style>
 </head>
 <body>
-<div id="main">
+<div id="main" v-cloak>
     <h1 v-if="status" style="color: #fff;text-align: center;margin-top: 20px;font-size: 6em">
         {{status}}
     </h1>
@@ -41,6 +45,12 @@
         <tr>
             <th colspan="10">
                 {{root.desc}}
+                <div style="float: right">
+                    <a href="https://gitee.com/erupt/zeta-api" target="_blank"><img
+                            src="https://gitee.com/erupt/zeta-api/badge/star.svg?theme=dark" alt=""></a>
+                    <a href="https://github.com/erupts/zeta-api" target="_blank"><img
+                            src="https://img.shields.io/github/stars/erupts/zeta-api?style=social" alt=""></a>
+                </div>
             </th>
         </tr>
         <tr>
@@ -80,7 +90,7 @@
                     Test
                 </button>
             </td>
-            <td>
+            <td class="text-center">
                 <input type="color" @change="elementTag(index)" v-model.lazy="ele.tag">
             </td>
         </tr>

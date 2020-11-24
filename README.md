@@ -1,4 +1,10 @@
-### 配置xml标签快速创建http接口
+# zeta-api
+
+[![star](https://gitee.com/erupt/zeta-api/badge/star.svg?theme=dark)](https://gitee.com/erupt/zeta-api)
+[![GitHub stars](https://img.shields.io/github/stars/erupts/zeta-api?style=social)](https://github.com/erupts/zeta-api)
+
+## 项目介绍
+配置xml标签快速创建http接口
 
 ## 框架特性
 1. 支持caffeine缓存，也可自定义缓存策略
@@ -15,7 +21,7 @@
 5. 在resources目录下创建epi文件夹
 6. 在epi目录下创建xml格式文件
 7. xml文件示范例
-```
+``` xml
 <?xml version="1.0" encoding="utf-8" ?>
 <zeta desc="zeta接口示例">
     <hello-world title="基础使用">
@@ -57,7 +63,7 @@
 
 
 ## application.yml配置项说明
-```
+``` yaml
 zeta-api:
   #是否热读取xml配置，生产环境不要开启此功能
   hotReadXml: true
@@ -77,7 +83,7 @@ zeta-api:
 ```
 
 ## 接口请求示例
-```
+``` javascript
 // jquery为例
 $.ajax({
     type: "POST",

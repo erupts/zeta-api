@@ -14,7 +14,7 @@
 
     <groupId>xyz.erupt</groupId>
     <artifactId>zeta-api</artifactId>
-    <version>0.3.15</version>
+    <version>0.3.16</version>
     <description>zeta api</description>
 
     <dependencies>

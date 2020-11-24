@@ -1,26 +1,24 @@
-# zeta-api
-
+# ZetaAPI
 [![star](https://gitee.com/erupt/zeta-api/badge/star.svg?theme=dark)](https://gitee.com/erupt/zeta-api)
 [![GitHub stars](https://img.shields.io/github/stars/erupts/zeta-api?style=social)](https://github.com/erupts/zeta-api)
 
 ## 项目介绍
-配置xml标签快速创建http接口
+SQL + XML快速创建Api接口与使用文档，开发速度快如闪电！
 
 ## 框架特性
-1. 支持caffeine缓存，也可自定义缓存策略
-2. 支持if条件判断，且if判断支持Js脚本
-3. 支持访问拦截，可通过拦截器修改表达式与返回结果
-4. 动态生成Api文档，可快捷查看与测试接口
+1. 配置简单功能丰富
+2. 使用xml标签属性就可支持缓存，默认缓存实现为caffeine，也可自定义缓存实现
+3. 标签内if分支判断，用于处理各种复杂场景
+4. 自定义访问拦截，可通过创建拦截器修改表达式与返回结果
+5. 动态生成Api文档，可以方便的查看API接口，支持在线测试与接口编辑
+6. 支持xml热更新，无需重启容器，即可读取最新xml配置
 
 ## 使用方法
-1. 创建spring boot项目
-2. 指定数据库连接信息
-3. 添加zeta-api依赖
-4. 入口类设置注解扫描路径
-@SpringBootApplication(scanBasePackages = "xyz.erupt")
-5. 在resources目录下创建epi文件夹
-6. 在epi目录下创建xml格式文件
-7. xml文件示范例
+1. 创建spring boot项目，添加zeta-api依赖
+2. 配置数据库连接与数据库驱动
+3. 入口类设置注解扫描路径 @SpringBootApplication(scanBasePackages = "xyz.erupt")
+4. 创建配置文件，/resources/epi/xxx.xml
+5. xml文件示范例
 ``` xml
 <?xml version="1.0" encoding="utf-8" ?>
 <zeta desc="zeta接口示例">
@@ -33,7 +31,7 @@
     </cache>
 
     <params title="参数获取与处理">
-        <param key="param" default="hellow zeta" title="返回值"/>
+        <param key="param" default="hello zeta" title="返回值"/>
         select :param param
     </params>
 
@@ -57,10 +55,8 @@
     </insert>
 </zeta>
 ```
-8. 启动项目
-9. 访问接口文档,查看已创建接口
-文档路径：http://${host}/zeta-doc/${xml文件名}.html
-
+启动项目，查看接口文档：http://${host}/zeta-doc/${xml文件名}.html  
+![img](https://oos.erupt.xyz/zeta-doc.png)
 
 ## application.yml配置项说明
 ``` yaml
@@ -72,10 +68,10 @@ zeta-api:
   #是否开启Api文档查询功能
   enableApiDoc: true
   #自定义缓存实现，需实现xyz.erupt.zeta_api.handler.ZetaCache接口
-  #cacheHandlerPath: xxx
+  cacheHandlerPath: xyz.erupt.xxxx
   #是否打印sql语句
   showSql: true
-  #访问白名单，不填表示不建立
+  #访问白名单，空表示不对ip进行鉴权
   ipWhite:
     - 127.0.0.1
     - 192.168.1.1
@@ -87,8 +83,8 @@ zeta-api:
 // jquery为例
 $.ajax({
     type: "POST",
-    url: "/zeta-api/sql/xxxxx",
-    contentType: "application/json",    //必须有
+    url: "/zeta-api/sql/{file}/{name}",
+    contentType: "application/json",    //请求内容需要为json
     data: JSON.stringify({ param: 10}), //必须使用JSON.stringify
     success: function (res) {
         alert(res);
@@ -96,5 +92,8 @@ $.ajax({
 });
 ```
 
-
+## 项目推荐
+Erupt Framework 通用数据管理框架  
+仓库地址：https://github.com/erupts/erupt  
+官网地址：https://www.erupt.xyz
 

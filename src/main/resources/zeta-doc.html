@@ -160,6 +160,7 @@
                     ele.tag = localStorage.getItem(tagKey + ele.name)
                     if (ele.params) {
                         var pm = {};
+                        ele.params = JSON.parse(ele.params);
                         for (var p in ele.params) {
                             var param = ele.params[p];
                             pm[param.key] = param.value;

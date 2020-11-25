@@ -1,5 +1,6 @@
 package xyz.erupt.zeta_api.controller;
 
+import com.google.gson.GsonBuilder;
 import lombok.SneakyThrows;
 import lombok.extern.java.Log;
 import org.apache.commons.lang3.StringUtils;
@@ -25,7 +26,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author liyuepeng
@@ -105,7 +109,7 @@ public class ZetaDocController {
                         paramVO.setTitle(param.attributeValue(TagConst.ParamTag.ATTR_TITLE));
                         paramVOList.add(paramVO);
                     }
-                    eleMap.put("params", paramVOList);
+                    eleMap.put("params", new GsonBuilder().serializeNulls().create().toJson(paramVOList));
                 }
                 eleList.add(eleMap);
             }

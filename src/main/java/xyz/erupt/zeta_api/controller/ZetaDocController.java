@@ -1,6 +1,7 @@
 package xyz.erupt.zeta_api.controller;
 
 import com.google.gson.GsonBuilder;
+import lombok.Cleanup;
 import lombok.SneakyThrows;
 import lombok.extern.java.Log;
 import org.apache.commons.lang3.StringUtils;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import xyz.erupt.zeta_api.config.ZetaApiConfig;
+import xyz.erupt.zeta_api.config.ZetaApiProp;
 import xyz.erupt.zeta_api.constant.PathConst;
 import xyz.erupt.zeta_api.constant.TagConst;
 import xyz.erupt.zeta_api.service.ZetaApiService;
@@ -26,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +43,7 @@ import java.util.Map;
 public class ZetaDocController {
 
     @Autowired
-    private ZetaApiConfig zetaApiConfig;
+    private ZetaApiProp zetaApiProp;
 
     @Autowired
     private ZetaApiService zetaApiService;
@@ -53,7 +55,7 @@ public class ZetaDocController {
     static {
         InputStream stream = ZetaDocController.class.getResourceAsStream(DOCUMENT_PATH);
         try {
-            page = StreamUtils.copyToString(stream, Charset.forName("UTF-8"));
+            page = StreamUtils.copyToString(stream, StandardCharsets.UTF_8);
             stream.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -62,23 +64,15 @@ public class ZetaDocController {
 
     @SneakyThrows
     @GetMapping(value = "/{fileName}.html", produces = "text/html;charset=utf-8")
-    public String doc(HttpServletResponse response, HttpServletRequest request,
-                      @PathVariable("fileName") String fileName) {
-        InputStream stream = ZetaDocController.class.getResourceAsStream(DOCUMENT_PATH);
-        try {
-            return StreamUtils.copyToString(stream, Charset.forName("UTF-8"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            stream.close();
-        }
-        return page;
+    public String doc(@PathVariable("fileName") String fileName) {
+        @Cleanup InputStream stream = ZetaDocController.class.getResourceAsStream(DOCUMENT_PATH);
+        return StreamUtils.copyToString(stream, StandardCharsets.UTF_8);
     }
 
     @GetMapping(value = "/build/doc/{fileName}")
     public Map<String, Object> apiDoc(HttpServletResponse response, HttpServletRequest request,
                                       @PathVariable("fileName") String fileName) {
-        if (!zetaApiConfig.isEnableApiDoc()) {
+        if (!zetaApiProp.isEnableApiDoc()) {
             response.setStatus(HttpStatus.FORBIDDEN.value());
             return null;
         }
@@ -117,7 +111,7 @@ public class ZetaDocController {
             map.put("desc", StringUtils.isNotBlank(desc) ? desc : fileName);
             map.put("elements", eleList);
             map.put("fileName", fileName);
-            map.put("domain", zetaApiConfig.getDomain() != null ? zetaApiConfig.getDomain() : request.getRequestURL().toString().split(PathConst.ZETA_DOC)[0]);
+            map.put("domain", zetaApiProp.getDomain() != null ? zetaApiProp.getDomain() : request.getRequestURL().toString().split(PathConst.ZETA_DOC)[0]);
             return map;
         } else {
             response.setStatus(HttpStatus.NOT_FOUND.value());

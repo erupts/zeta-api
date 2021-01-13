@@ -11,7 +11,7 @@ import java.util.Map;
  */
 public interface ZetaApi {
 
-    Collection query(Element element, String queryStr, Map<String, Object> params);
+    Collection<?> query(Element element, String queryStr, Map<String, Object> params);
 
     Object modify(Element element, String queryStr, Map<String, Object> params);
 

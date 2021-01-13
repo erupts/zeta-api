@@ -16,9 +16,8 @@ SQL + XML快速创建Api接口与使用文档，开发速度快如闪电！
 ## 使用方法
 1. 创建spring boot项目，添加zeta-api依赖
 2. 配置数据库连接与数据库驱动
-3. 入口类设置注解扫描路径 @SpringBootApplication(scanBasePackages = "xyz.erupt")
-4. 创建配置文件，/resources/epi/xxx.xml
-5. xml文件示范例
+3. 创建xml配置文件：/resources/epi/xxx.xml
+4. xml文件示范例
 ``` xml
 <?xml version="1.0" encoding="utf-8" ?>
 <zeta desc="zeta接口示例">
@@ -55,7 +54,7 @@ SQL + XML快速创建Api接口与使用文档，开发速度快如闪电！
     </insert>
 </zeta>
 ```
-启动项目，查看接口文档：http://${host}/zeta-doc/${xml文件名}.html  
+启动项目，查看接口文档：http://localhost:8080/zeta-doc/${xml文件名}.html  
 ![img](https://oos.erupt.xyz/zeta-doc.png)
 
 ## application.yml配置项说明

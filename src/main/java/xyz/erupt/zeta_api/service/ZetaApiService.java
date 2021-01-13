@@ -10,7 +10,7 @@ import org.dom4j.io.SAXReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import xyz.erupt.zeta_api.config.ZetaApiConfig;
+import xyz.erupt.zeta_api.config.ZetaApiProp;
 import xyz.erupt.zeta_api.constant.TagConst;
 import xyz.erupt.zeta_api.handler.ZetaCache;
 import xyz.erupt.zeta_api.handler.ZetaApiHandler;
@@ -21,6 +21,7 @@ import xyz.erupt.zeta_api.util.IpUtil;
 import xyz.erupt.zeta_api.util.NotFountException;
 import xyz.erupt.zeta_api.util.ZetaApiSpringUtil;
 
+import javax.annotation.Resource;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.servlet.http.HttpServletRequest;
@@ -40,14 +41,14 @@ import java.util.function.BiFunction;
 @Service
 public class ZetaApiService {
 
-    @Autowired
+    @Resource
     private HttpServletRequest request;
 
-    @Autowired
+    @Resource
     private HttpServletResponse response;
 
-    @Autowired
-    private ZetaApiConfig zetaApiConfig;
+    @Resource
+    private ZetaApiProp zetaApiProp;
 
     private final ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
 
@@ -55,19 +56,19 @@ public class ZetaApiService {
 
     private static final String QUERY_FEATURES = "select";
 
-    private Map<String, Document> xmlDocuments = new ConcurrentHashMap<>();
+    private final Map<String, Document> xmlDocuments = new ConcurrentHashMap<>();
 
     public Object action(String fileName, String elementName, ZetaApi zetaApi, Map<String, Object> params) {
         return xmlToQuery(fileName, elementName, (element, expression) -> {
 //            Attribute typeAttr = element.attribute(EleTag.TYPE);
             if (expression.startsWith(QUERY_FEATURES) || expression.startsWith(QUERY_FEATURES.toUpperCase())) {
                 Attribute cacheAttr = element.attribute(EleTag.CACHE);
-                if (null != cacheAttr && zetaApiConfig.isEnableCache()) {
+                if (null != cacheAttr && zetaApiProp.isEnableCache()) {
                     {
                         String cacheKey = fileName + "_" + elementName;
                         ZetaCache cacheHandler = null;
                         try {
-                            cacheHandler = ZetaApiSpringUtil.getBeanByPath(zetaApiConfig.getCacheHandlerPath(), ZetaCache.class);
+                            cacheHandler = ZetaApiSpringUtil.getBeanByPath(zetaApiProp.getCacheHandlerPath(), ZetaCache.class);
                         } catch (ClassNotFoundException e) {
                             e.printStackTrace();
                         }
@@ -89,7 +90,7 @@ public class ZetaApiService {
 
     //    校验ip白名单
     public boolean validateIpWhite() {
-        List<String> ipWhite = zetaApiConfig.getIpWhite();
+        List<String> ipWhite = zetaApiProp.getIpWhite();
         if (null != ipWhite && ipWhite.size() > 0) {
             String reqIp = IpUtil.getIpAddr(request);
             for (String ip : ipWhite) {
@@ -106,15 +107,15 @@ public class ZetaApiService {
 
     public Document getXmlDocument(String fileName) {
         try {
-            if (zetaApiConfig.isHotReadXml()) {
+            if (zetaApiProp.isHotReadXml()) {
                 return new SAXReader().read(this.getClass().getResourceAsStream(
-                        zetaApiConfig.getXmlbasePath() + "/" + fileName + ".xml"));
+                        zetaApiProp.getXmlbasePath() + "/" + fileName + ".xml"));
             } else {
                 if (xmlDocuments.containsKey(fileName)) {
                     return xmlDocuments.get(fileName);
                 } else {
                     Document document = new SAXReader().read(this.getClass().getResourceAsStream(
-                            zetaApiConfig.getXmlbasePath() + "/" + fileName + ".xml"));
+                            zetaApiProp.getXmlbasePath() + "/" + fileName + ".xml"));
                     xmlDocuments.put(fileName, document);
                     return document;
                 }

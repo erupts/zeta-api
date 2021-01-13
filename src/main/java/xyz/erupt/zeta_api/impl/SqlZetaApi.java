@@ -2,11 +2,11 @@ package xyz.erupt.zeta_api.impl;
 
 import lombok.extern.java.Log;
 import org.dom4j.Element;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
-import xyz.erupt.zeta_api.config.ZetaApiConfig;
+import xyz.erupt.zeta_api.config.ZetaApiProp;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
@@ -19,15 +19,15 @@ import java.util.Map;
 public class SqlZetaApi implements ZetaApi {
 
 
-    @Autowired
+    @Resource
     private NamedParameterJdbcTemplate namedTemplate;
 
-    @Autowired
-    private ZetaApiConfig zetaApiConfig;
+    @Resource
+    private ZetaApiProp zetaApiProp;
 
     @Override
-    public List query(Element element, String sql, Map<String, Object> params) {
-        if (zetaApiConfig.isShowSql()){
+    public List<Map<String, Object>> query(Element element, String sql, Map<String, Object> params) {
+        if (zetaApiProp.isShowSql()){
             log.info(sql);
         }
         return namedTemplate.queryForList(sql, params);
@@ -35,7 +35,7 @@ public class SqlZetaApi implements ZetaApi {
 
     @Override
     public Object modify(Element element, String sql, Map<String, Object> params) {
-        if (zetaApiConfig.isShowSql()){
+        if (zetaApiProp.isShowSql()){
             log.info(sql);
         }
         return namedTemplate.update(sql, params);

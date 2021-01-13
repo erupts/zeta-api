@@ -1,11 +1,12 @@
 package xyz.erupt.zeta_api.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import xyz.erupt.zeta_api.constant.PathConst;
 import xyz.erupt.zeta_api.impl.SqlZetaApi;
 import xyz.erupt.zeta_api.service.ZetaApiService;
+import xyz.erupt.zeta_api.vo.ResultVo;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,10 +18,10 @@ import java.util.Map;
 @RequestMapping(PathConst.ZETA_API)
 public class ZetaApiController {
 
-    @Autowired
+    @Resource
     private SqlZetaApi zetaApi;
 
-    @Autowired
+    @Resource
     private ZetaApiService zetaApiService;
 
     /**
@@ -30,17 +31,18 @@ public class ZetaApiController {
      */
     @RequestMapping("/sql/{fileName}/{elementName}")
     @ResponseBody
-    public Map<String, Object> action(@PathVariable("fileName") String fileName,
+    public ResultVo action(@PathVariable("fileName") String fileName,
                                       @PathVariable("elementName") String elementName,
                                       @RequestBody(required = false) Map<String, Object> params,
                                       HttpServletRequest request) {
         if (!zetaApiService.validateIpWhite()) {
             return null;
         }
-        Map<String, Object> map = new HashMap<>();
         request.setAttribute(ZetaApiService.REQUEST_BODY_KEY, params);
-        map.put("result", zetaApiService.action(fileName, elementName, zetaApi, params));
-        return map;
+        ResultVo resultVo = new ResultVo();
+        resultVo.setResult(zetaApiService.action(fileName, elementName, zetaApi, params));
+        resultVo.setSuccess(true);
+        return resultVo;
     }
 
 

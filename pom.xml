@@ -14,7 +14,7 @@
 
     <groupId>xyz.erupt</groupId>
     <artifactId>zeta-api</artifactId>
-    <version>0.5.1</version>
+    <version>0.5.2</version>
     <description>zeta api</description>
 
     <dependencies>
@@ -56,11 +56,146 @@
         </dependency>
     </dependencies>
 
-    <distributionManagement>
-        <repository>
-            <id>wings-times</id>
-            <name>wings-times-releases</name>
-            <url>http://192.168.1.189:8081/repository/maven-releases/</url>
-        </repository>
-    </distributionManagement>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <verbose>true</verbose>
+                    <fork>true</fork>
+                    <compilerArgs>
+                        <compilerArg>-parameters</compilerArg>
+                    </compilerArgs>
+                    <!--                    <executable>/Library/Java/JavaVirtualMachines/jdk1.8.0_231.jdk/Contents/Home/bin/javac</executable>-->
+                </configuration>
+            </plugin>
+            <!-- 一键更新子模块版本号 plugins -> versions -> version:set  -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.7</version>
+            </plugin>
+            <!--SCM插件-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-scm-plugin</artifactId>
+                <version>1.8.1</version>
+            </plugin>
+        </plugins>
+    </build>
+
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <scm>
+        <tag>master</tag>
+        <url>git@github.com:erupts/zeta-api.git</url>
+        <connection>scm:git:git@github.com:erupts/zeta-api.git</connection>
+        <developerConnection>scm:git:git@github.com:erupts/zeta-api.git</developerConnection>
+    </scm>
+    <developers>
+        <developer>
+            <name>yuepeng</name>
+            <email>erupts@126.com</email>
+            <roles>
+                <role>owner</role>
+            </roles>
+            <timezone>+8</timezone>
+        </developer>
+    </developers>
+
+    <profiles>
+        <profile>
+            <id>disable-javadoc-doclint</id>
+            <activation>
+                <jdk>[1.8,)</jdk>
+            </activation>
+            <!-- java8版本导致javadoc打包编译失败时候，添加-->
+            <properties>
+                <javadoc.opts>-Xdoclint:none</javadoc.opts>
+                <javadocExecutable>${java.home}/../bin/javadoc</javadocExecutable>
+            </properties>
+        </profile>
+        <profile>
+            <id>release</id>
+            <dependencies>
+                <dependency>
+                    <groupId>javax.interceptor</groupId>
+                    <artifactId>javax.interceptor-api</artifactId>
+                    <version>1.2</version>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>2.2.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- Javadoc -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.0.0</version>
+                        <configuration>
+                            <additionalOptions>
+                                <additionalOption>-Xdoclint:none</additionalOption>
+                            </additionalOptions>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- GPG -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.5</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>erupt</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
+                <repository>
+                    <id>erupt</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+    </profiles>
 </project>

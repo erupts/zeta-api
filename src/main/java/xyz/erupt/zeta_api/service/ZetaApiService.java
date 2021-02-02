@@ -60,17 +60,16 @@ public class ZetaApiService {
 
     public Object action(String fileName, String elementName, ZetaApi zetaApi, Map<String, Object> params) {
         return xmlToQuery(fileName, elementName, (element, expression) -> {
-//            Attribute typeAttr = element.attribute(EleTag.TYPE);
             if (expression.startsWith(QUERY_FEATURES) || expression.startsWith(QUERY_FEATURES.toUpperCase())) {
                 Attribute cacheAttr = element.attribute(EleTag.CACHE);
                 if (null != cacheAttr && zetaApiProp.isEnableCache()) {
                     {
                         String cacheKey = fileName + "_" + elementName;
-                        ZetaCache cacheHandler = null;
+                        ZetaCache cacheHandler;
                         try {
                             cacheHandler = ZetaApiSpringUtil.getBeanByPath(zetaApiProp.getCacheHandlerPath(), ZetaCache.class);
                         } catch (ClassNotFoundException e) {
-                            e.printStackTrace();
+                            throw new RuntimeException(e);
                         }
                         Object result = cacheHandler.get(cacheKey, params);
                         if (null == result) {
@@ -88,7 +87,7 @@ public class ZetaApiService {
         });
     }
 
-    //    校验ip白名单
+    // 校验ip白名单
     public boolean validateIpWhite() {
         List<String> ipWhite = zetaApiProp.getIpWhite();
         if (null != ipWhite && ipWhite.size() > 0) {

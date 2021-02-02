@@ -14,10 +14,18 @@ SQL + XML快速创建Api接口与使用文档，开发速度快如闪电！
 6. 支持xml热更新，无需重启容器，即可读取最新xml配置
 
 ## 使用方法
-1. 创建spring boot项目，添加zeta-api依赖
-2. 配置数据库连接与数据库驱动
-3. 创建xml配置文件：/resources/epi/xxx.xml
-4. xml文件示范例
+1. 创建spring boot项目
+2. 导入zeta-api依赖
+```xml
+<dependency>
+    <groupId>xyz.erupt</groupId>
+    <artifactId>zeta-api</artifactId>
+    <version>0.5.2</version>
+</dependency>
+```
+3. 配置数据库连接与数据库驱动
+4. 创建xml配置文件：/resources/epi/xxx.xml
+5. xml文件示范例
 ``` xml
 <?xml version="1.0" encoding="utf-8" ?>
 <zeta desc="zeta接口示例">

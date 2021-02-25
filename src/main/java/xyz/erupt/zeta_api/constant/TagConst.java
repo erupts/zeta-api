@@ -22,4 +22,10 @@ public class TagConst {
         public static final String ATTR_TEST = "test";
     }
 
+    public static class LinkTag {
+        public static final String NAME = "link";
+
+        public static final String ATTR_ID = "id";
+    }
+
 }

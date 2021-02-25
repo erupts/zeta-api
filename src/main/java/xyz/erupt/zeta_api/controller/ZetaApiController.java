@@ -25,22 +25,20 @@ public class ZetaApiController {
     private ZetaApiService zetaApiService;
 
     /**
-     * @param fileName   文件名称
+     * @param fileName    文件名称
      * @param elementName xml中sql元素
      * @return result
      */
     @RequestMapping("/sql/{fileName}/{elementName}")
     @ResponseBody
     public ResultVo action(@PathVariable("fileName") String fileName,
-                                      @PathVariable("elementName") String elementName,
-                                      @RequestBody(required = false) Map<String, Object> params,
-                                      HttpServletRequest request) {
+                           @PathVariable("elementName") String elementName,
+                           @RequestBody(required = false) Map<String, Object> params) {
         if (!zetaApiService.validateIpWhite()) {
             return null;
         }
-        request.setAttribute(ZetaApiService.REQUEST_BODY_KEY, params);
         ResultVo resultVo = new ResultVo();
-        resultVo.setResult(zetaApiService.action(fileName, elementName, zetaApi, params));
+        resultVo.setResult(zetaApiService.action(fileName, elementName, zetaApi, params, resultVo.getMap()));
         resultVo.setSuccess(true);
         return resultVo;
     }

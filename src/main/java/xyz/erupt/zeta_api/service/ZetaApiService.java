@@ -22,8 +22,10 @@ import xyz.erupt.zeta_api.util.NotFountException;
 import xyz.erupt.zeta_api.util.ZetaApiSpringUtil;
 
 import javax.annotation.Resource;
+import javax.script.Bindings;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import javax.script.SimpleBindings;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.MalformedURLException;
@@ -50,18 +52,19 @@ public class ZetaApiService {
     @Resource
     private ZetaApiProp zetaApiProp;
 
-    private final ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
-
-    public static final String REQUEST_BODY_KEY = "$requestBody";
-
     private static final String QUERY_FEATURES = "select";
 
     private final Map<String, Document> xmlDocuments = new ConcurrentHashMap<>();
 
-    public Object action(String fileName, String elementName, ZetaApi zetaApi, Map<String, Object> params) {
-        return xmlToQuery(fileName, elementName, (element, expression) -> {
+    public Object action(String fileName, String elementName, ZetaApi zetaApi, Map<String, Object> params, Map<String, Object> linkMapResult) {
+        return xmlToQuery(fileName, elementName, params, (element, expression) -> {
             if (expression.startsWith(QUERY_FEATURES) || expression.startsWith(QUERY_FEATURES.toUpperCase())) {
                 Attribute cacheAttr = element.attribute(EleTag.CACHE);
+                int i = 0;
+                for (Element link : element.elements(TagConst.LinkTag.NAME)) {
+                    String id = link.attributeValue(TagConst.LinkTag.ATTR_ID);
+                    linkMapResult.put((id == null ? TagConst.LinkTag.NAME + "_" + i++ : id) + "", zetaApi.query(link, this.parseElement(link, params), params));
+                }
                 if (null != cacheAttr && zetaApiProp.isEnableCache()) {
                     {
                         String cacheKey = fileName + "_" + elementName;
@@ -128,13 +131,13 @@ public class ZetaApiService {
         }
     }
 
-    private Object xmlToQuery(String fileName, String elementName, BiFunction<Element, String, Object> function) {
+    private Object xmlToQuery(String fileName, String elementName, Map<String, Object> params, BiFunction<Element, String, Object> function) {
         Element rootElement = getXmlDocument(fileName).getRootElement();
         Element element = rootElement.element(elementName);
         if (null == element) {
             throw new NotFountException("not found " + elementName + " element");
         }
-        String expression = parseElement(element);
+        String expression = parseElement(element, params);
         ZetaApiHandler zetaApiHandler = getRootHandler(rootElement);
         if (null != zetaApiHandler) {
             expression = zetaApiHandler.handler(element, expression);
@@ -146,25 +149,25 @@ public class ZetaApiService {
         return result;
     }
 
+    private static final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("nashorn");
+
     @SneakyThrows
-    private String parseElement(Element element) {
+    private String parseElement(Element element, Map<String, Object> param) {
         String content = element.getTextTrim();
         List<Element> list = element.elements();
         if (list.size() > 0) {
             StringBuilder sb = new StringBuilder(content);
-            ScriptEngine js = scriptEngineManager.getEngineByName("JavaScript");
-            Object paramObj = request.getAttribute(ZetaApiService.REQUEST_BODY_KEY);
-            if (paramObj != null) {
-                Map<String, Object> param = (Map<String, Object>) paramObj;
+            Bindings bindings = new SimpleBindings();
+            if (param != null) {
                 for (Map.Entry<String, Object> entry : param.entrySet()) {
-                    js.put(entry.getKey(), entry.getValue());
+                    bindings.put(entry.getKey(), entry.getValue());
                 }
             }
             for (Element ele : list) {
                 if (TagConst.IfTag.NAME.equals(ele.getName())) {
                     Attribute testAttr = ele.attribute(TagConst.IfTag.ATTR_TEST);
                     if (null != testAttr) {
-                        if ((Boolean) js.eval(String.format("!!(%s)", testAttr.getValue()))) {
+                        if ((Boolean) scriptEngine.eval(String.format("!!(%s)", testAttr.getValue()), bindings)) {
                             sb.append(" ").append(ele.getTextTrim());
                         }
                     } else {
@@ -191,17 +194,4 @@ public class ZetaApiService {
         return null;
     }
 
-    public Map<String, String> getReqMap() {
-        Enumeration<String> parameterNames = request.getParameterNames();
-        Map<String, String> map = new TreeMap<>();
-        while (parameterNames.hasMoreElements()) {
-            String parameterName = parameterNames.nextElement();
-            String val = request.getParameter(parameterName);
-            if (StringUtils.isBlank(val)) {
-                val = "";
-            }
-            map.put(parameterName, val);
-        }
-        return map;
-    }
 }

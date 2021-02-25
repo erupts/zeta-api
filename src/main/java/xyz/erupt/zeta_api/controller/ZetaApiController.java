@@ -38,7 +38,7 @@ public class ZetaApiController {
             return null;
         }
         ResultVo resultVo = new ResultVo();
-        resultVo.setResult(zetaApiService.action(fileName, elementName, zetaApi, params, resultVo.getMap()));
+        resultVo.setResult(zetaApiService.action(fileName, elementName, zetaApi, params, resultVo.getLinks()));
         resultVo.setSuccess(true);
         return resultVo;
     }

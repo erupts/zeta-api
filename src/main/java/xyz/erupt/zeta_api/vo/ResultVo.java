@@ -18,6 +18,6 @@ public class ResultVo {
 
     private boolean success;
 
-    private Map<String, Object> map = new HashMap<>();
+    private Map<String, Object> links = new HashMap<>();
 
 }

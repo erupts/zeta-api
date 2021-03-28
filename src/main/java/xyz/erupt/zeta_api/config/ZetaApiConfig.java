@@ -1,5 +1,6 @@
 package xyz.erupt.zeta_api.config;
 
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,5 +10,6 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan("xyz.erupt.zeta_api")
+@EnableConfigurationProperties({ ZetaApiProp.class })
 public class ZetaApiConfig {
 }

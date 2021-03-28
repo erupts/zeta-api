@@ -14,7 +14,7 @@
 
     <groupId>xyz.erupt</groupId>
     <artifactId>zeta-api</artifactId>
-    <version>0.5.4</version>
+    <version>0.5.5</version>
     <description>zeta api</description>
 
     <dependencies>
@@ -27,6 +27,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>

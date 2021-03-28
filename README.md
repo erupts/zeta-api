@@ -17,12 +17,20 @@ SQL + XML快速创建Api接口与使用文档，开发速度快如闪电！
 
 ## 使用方法
 1. 创建spring boot项目
-2. 导入zeta-api依赖
+2. 导入依赖
 ```xml
 <dependency>
     <groupId>xyz.erupt</groupId>
     <artifactId>zeta-api</artifactId>
-    <version>0.5.4</version>
+    <version>0.5.5</version>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-jdbc</artifactId>
 </dependency>
 ```
 3. 配置数据库连接与数据库驱动

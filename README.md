@@ -77,7 +77,7 @@ SQL + XML快速创建Api接口与使用文档，开发速度快如闪电！
     </links>
 </zeta>
 ```
-启动项目，查看接口文档：http://localhost:8080/zeta-doc/${xml文件名}.html
+启动项目，查看接口文档：http://localhost:8080/zeta-doc/xml文件名.html
 
 演示文档：http://localhost:8080/zeta-doc/$demo.html
   
